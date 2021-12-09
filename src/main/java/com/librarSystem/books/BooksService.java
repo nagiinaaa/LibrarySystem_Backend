@@ -1,6 +1,7 @@
 package com.librarSystem.books;
 
 import com.librarSystem.exception.ResourceNotFound;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,6 +11,7 @@ public class BooksService {
 
     private BooksDAO booksDAO;
 
+    @Autowired
     public BooksService(BooksDAO booksDAO) {
         this.booksDAO = booksDAO;
     }

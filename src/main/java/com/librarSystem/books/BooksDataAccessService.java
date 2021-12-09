@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
+@Repository("books")
 public class BooksDataAccessService implements BooksDAO {
 
     private JdbcTemplate jdbcTemplate;
