@@ -33,4 +33,29 @@ public class UsersDataAccessService implements UsersDAO{
                 .stream()
                 .findFirst();
     }
+
+    @Override
+    public int deleteUser(int id){
+        String sql = """
+                DELETE FROM users WHERE id = ?
+                """;
+        return jdbcTemplate.update(sql, id);
+    }
+
+    @Override
+    public int updateUser(int id, Users users){
+        String sql = """
+                UPDATE users SET username = ?, password = ?, librarian = ? WHERE id = ?;
+                """;
+        return jdbcTemplate.update(sql, users.getUsername(), users.getPassword(), users.getLibrarian(), id);
+    }
+
+    @Override
+    public int registerUser (Users users){
+        String sql = """
+                INSERT INTO users (username, password, librarian)
+                VALUES (?, ?, ?)
+                """;
+        return jdbcTemplate.update(sql, users.getUsername(), users.getPassword(), users.getLibrarian());
+    }
 }

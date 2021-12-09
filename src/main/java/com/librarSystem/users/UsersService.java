@@ -19,18 +19,35 @@ public class UsersService {
     }
 
     public List<Users> getAllUsers(){
-        if(usersDAO.getAllUsers().isEmpty()){
+        if(usersDAO.getAllUsers().isEmpty()) {
             throw new ResourceNotFound("no users found");
         }
         return usersDAO.getAllUsers();
     }
 
     public Optional<Users> selectUserById(int id){
-        if(usersDAO.selectUserById(id).isEmpty()){
+        if(usersDAO.selectUserById(id).isEmpty()) {
             throw new ResourceNotFound("user with id " +id+ " doesn't exist");
         }
         return usersDAO.selectUserById(id);
     }
 
+    public int deleteUser(int id){
+        if(usersDAO.selectUserById(id).isEmpty()) {
+            throw new ResourceNotFound("user with id " +id+ " doesn't exist");
+        }
+        return usersDAO.deleteUser(id);
+    }
+
+    public int updateUser(int id, Users users){
+        if(usersDAO.selectUserById(id).isEmpty()) {
+            throw new ResourceNotFound("user with id " +id+ " doesn't exist");
+        }
+        return usersDAO.updateUser(id, users);
+    }
+
+    public int registerUser (Users users){
+        return usersDAO.registerUser(users);
+    }
 
 }

@@ -1,10 +1,7 @@
 package com.librarSystem.users;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,8 +22,24 @@ public class UsersController {
         return usersService.getAllUsers();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     public Optional<Users> selectUserById(@PathVariable("id") int id){
         return usersService.selectUserById(id);
     }
+
+    @DeleteMapping("{id}")
+    public int deletUser (@PathVariable("id") int id){
+        return usersService.deleteUser(id);
+    }
+
+    @PutMapping("{id}")
+    public int updateUser (@PathVariable("id") int id, @RequestBody Users users){
+        return usersService.updateUser(id, users);
+    }
+
+    @PostMapping
+    public int registerUser (@RequestBody Users users){
+        return usersService.registerUser(users);
+    }
+
 }

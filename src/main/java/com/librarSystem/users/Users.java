@@ -6,9 +6,9 @@ public class Users {
     private int id;
     private String username;
     private String password;
-    private String librarian;
+    private Boolean librarian;
 
-    public Users(int id, String username, String password, String librarian) {
+    public Users(int id, String username, String password, Boolean librarian) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -39,11 +39,11 @@ public class Users {
         this.password = password;
     }
 
-    public String getLibrarian() {
+    public Boolean getLibrarian() {
         return librarian;
     }
 
-    public void setLibrarian(String librarian) {
+    public void setLibrarian(Boolean librarian) {
         this.librarian = librarian;
     }
 
@@ -66,7 +66,7 @@ public class Users {
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
-                ", librarian='" + librarian + '\'' +
+                ", librarian=" + librarian +
                 '}';
     }
 }
