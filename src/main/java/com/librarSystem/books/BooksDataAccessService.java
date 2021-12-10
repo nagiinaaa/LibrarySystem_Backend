@@ -44,6 +44,24 @@ public class BooksDataAccessService implements BooksDAO {
     }
 
     @Override
+    public Object checkTotalCopies(String title){
+        String sql = """
+                SELECT * FROM books
+                WHERE lower(title) = ?;
+                """;
+        return jdbcTemplate.query(sql, new NumberOfCopiesResultSetExtractor(), title);
+    }
+
+    @Override
+    public Object findBookId(String title){
+        String sql = """
+                SELECT id FROM books
+                WHERE lower(title) = ?;
+                """;
+        return jdbcTemplate.query(sql, new BookIdResultSetExtractor(), title);
+    }
+
+    @Override
     public int deleteBook(int id){
         String sql = """
                 DELETE FROM books WHERE id = ?
@@ -60,5 +78,23 @@ public class BooksDataAccessService implements BooksDAO {
                 """;
         return jdbcTemplate.update(sql, books.getTitle(), books.getAuthor(), books.getBookFormat(),
                 books.getNumberOfCopies(), books.getBookCover(), id);
+    }
+
+    @Override
+    public int updateAvailableCopies (String title, int copies){
+        String sql = """
+                UPDATE books SET copiesAvailable = ?
+                WHERE lower(title) = ?
+                """;
+        return jdbcTemplate.update(sql, copies, title);
+    }
+
+    @Override
+    public int updateCopiesInUse (String title, int copies){
+        String sql = """
+                UPDATE books SET copiesInUse = ?
+                WHERE lower(title) = ?
+                """;
+        return jdbcTemplate.update(sql, copies, title);
     }
 }

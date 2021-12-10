@@ -10,7 +10,10 @@ public class LibSystemRowMapper implements RowMapper<LibSystem> {
     @Override
     public LibSystem mapRow(ResultSet rs, int rowNum) throws SQLException {
         LibSystem libSystem = new LibSystem(
+                rs.getInt("id"),
+                rs.getInt("userid"),
                 rs.getString("username"),
+                rs.getInt("bookid"),
                 rs.getString("title"),
                 rs.getString("author")
         );

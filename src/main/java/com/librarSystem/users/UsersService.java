@@ -32,6 +32,13 @@ public class UsersService {
         return usersDAO.selectUserById(id);
     }
 
+    public Object getUserId(String username){
+        if(usersDAO.getUserId(username).equals(null)){
+            throw new ResourceNotFound(username + " doesn't exist");
+        }
+        return usersDAO.getUserId(username);
+    }
+
     public int deleteUser(int id){
         if(usersDAO.selectUserById(id).isEmpty()) {
             throw new ResourceNotFound("user with id " +id+ " doesn't exist");
