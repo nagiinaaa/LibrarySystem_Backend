@@ -4,7 +4,6 @@ import com.librarSystem.exception.ResourceNotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Book;
 import java.util.List;
 
 @Service
@@ -38,21 +37,24 @@ public class BooksService {
         return booksDAO.getBooksByAuthor(author);
     }
 
-    public Object checkTotalCopies(String title){
-        return booksDAO.checkTotalCopies(title);
+    public Object checkTotalCopies(String title, String author, String bookFormat){
+        return booksDAO.checkTotalCopies(title, author, bookFormat);
     }
 
-    public Object findBookId(String title){
-        return booksDAO.findBookId(title);
+    public Object findBookId(String title, String author, String bookFormat){
+        if(booksDAO.findBookId(title, author, bookFormat) == null){
+            throw new ResourceNotFound("no books with the title " +title+ " by " +author+ " found in " +bookFormat+ "format");
+        }
+        return booksDAO.findBookId(title, author, bookFormat);
     }
 
-    public int updateAvailableCopies(String title, int copies){
-        return booksDAO.updateAvailableCopies(title, copies);
+    public int updateAvailableCopies(String title, String author, int copies, String bookFormat){
+        return booksDAO.updateAvailableCopies(title, author, copies, bookFormat);
     }
 
-    public int updateCopiesInUse(String title, int copies){
-        return booksDAO.updateCopiesInUse(title, copies);
+    public int updateCopiesInUse(String title, String author, int copies, String bookFormat){
+        return booksDAO.updateCopiesInUse(title, author, copies, bookFormat);
     }
 
-    // add logic to update and delete books so only a librarian can use them.
+    // add logic to update, delete and add books so only a librarian can use them.
 }

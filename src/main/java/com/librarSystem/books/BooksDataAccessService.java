@@ -44,21 +44,21 @@ public class BooksDataAccessService implements BooksDAO {
     }
 
     @Override
-    public Object checkTotalCopies(String title){
+    public Object checkTotalCopies(String title, String author, String bookFormat){
         String sql = """
                 SELECT * FROM books
-                WHERE lower(title) = ?;
+                WHERE lower(title) = ? AND lower(author) = ? AND lower(bookFormat) = ?;
                 """;
-        return jdbcTemplate.query(sql, new NumberOfCopiesResultSetExtractor(), title);
+        return jdbcTemplate.query(sql, new NumberOfCopiesResultSetExtractor(), title, author, bookFormat);
     }
 
     @Override
-    public Object findBookId(String title){
+    public Object findBookId(String title, String author, String bookFormat){
         String sql = """
                 SELECT id FROM books
-                WHERE lower(title) = ?;
+                WHERE lower(title) = ? AND lower(author) = ? AND lower(bookFormat) = ?;
                 """;
-        return jdbcTemplate.query(sql, new BookIdResultSetExtractor(), title);
+        return jdbcTemplate.query(sql, new BookIdResultSetExtractor(), title, author, bookFormat);
     }
 
     @Override
@@ -81,20 +81,20 @@ public class BooksDataAccessService implements BooksDAO {
     }
 
     @Override
-    public int updateAvailableCopies (String title, int copies){
+    public int updateAvailableCopies (String title, String author, int copies, String bookFormat){
         String sql = """
                 UPDATE books SET copiesAvailable = ?
-                WHERE lower(title) = ?
+                WHERE lower(title) = ? AND lower(author) = ? AND lower(bookFormat) = ?
                 """;
-        return jdbcTemplate.update(sql, copies, title);
+        return jdbcTemplate.update(sql, copies, title, author, bookFormat);
     }
 
     @Override
-    public int updateCopiesInUse (String title, int copies){
+    public int updateCopiesInUse (String title, String author, int copies, String bookFormat){
         String sql = """
                 UPDATE books SET copiesInUse = ?
-                WHERE lower(title) = ?
+                WHERE lower(title) = ? AND lower(author) = ? AND lower(bookFormat) = ?
                 """;
-        return jdbcTemplate.update(sql, copies, title);
+        return jdbcTemplate.update(sql, copies, title, author, bookFormat);
     }
 }

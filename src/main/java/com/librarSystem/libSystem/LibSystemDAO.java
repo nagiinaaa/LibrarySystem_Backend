@@ -7,9 +7,11 @@ public interface LibSystemDAO {
 
     List<LibSystem> checkAllLoans();
     List<LibSystem> selectLoansByUser(String username);
-    List<LibSystem> selectLoansByTitle(String title);
+    ArrayList<String> selectLoansByTitleAndAuthorAndBookFormat (String title, String author, String bookFormat);
     List<LibSystem> selectLoansById(int id);
     ArrayList<String> getBookTitlesLoanedByUser(String username);
-    int returnBook(int id, String title);
-    int loanBook(String username, String title, int userid, int bookid);
+    ArrayList<String> getAuthorsLoanedByUser(String author);
+    ArrayList<String> getBookFormatLoanedByUser(String bookFormat);
+    int returnBook(int id, String title, String author, String bookFormat);
+    int borrowBook(String username, String title, int userid, int bookid);
 }

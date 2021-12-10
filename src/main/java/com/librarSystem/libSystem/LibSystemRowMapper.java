@@ -15,7 +15,8 @@ public class LibSystemRowMapper implements RowMapper<LibSystem> {
                 rs.getString("username"),
                 rs.getInt("bookid"),
                 rs.getString("title"),
-                rs.getString("author")
+                rs.getString("author"),
+                rs.getString("bookFormat")
         );
         return libSystem;
     }

@@ -3,6 +3,7 @@ package com.librarSystem.libSystem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -26,24 +27,20 @@ public class LibSystemController {
         return libSystemService.selectLoansByUser(username);
     }
 
-    @GetMapping("/book/{title}")
-    public List<LibSystem> selectLoansByTitle(@PathVariable("title") String title){
-        return libSystemService.selectLoansByTitle(title);
-    }
-
     @GetMapping("/loan/{id}")
     public List<LibSystem> selectLoanById(@PathVariable("id") int id){
         return libSystemService.selectLoanById(id);
     }
 
-    @DeleteMapping("{id}/{title}")
-    public void returnBook(@PathVariable("id") int id, @PathVariable("title") String title){
-        libSystemService.returnBook(id, title);
+    @DeleteMapping("{id}/{title}/{author}/{bookFormat}")
+    public void returnBook(@PathVariable("id") int id, @PathVariable("title") String title,  @PathVariable("author") String author, @PathVariable("bookFormat") String bookFormat){
+        libSystemService.returnBook(id, title, author, bookFormat);
     }
 
-    @PostMapping("{username}/{title}")
-    public void loanBook(@PathVariable("username") String username, @PathVariable("title") String title){
-        libSystemService.loanBook(username, title);
+    @PostMapping("{username}/{title}/{author}/{bookFormat}")
+    public void borrowBook(@PathVariable("username") String username, @PathVariable("title") String title,
+                         @PathVariable("author") String author, @PathVariable("bookFormat") String bookFormat){
+        libSystemService.borrowBook(username, title, author, bookFormat);
     }
 
 }

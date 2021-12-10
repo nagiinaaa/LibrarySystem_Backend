@@ -9,6 +9,7 @@ public class LibSystem {
     private int bookid;
     private String title;
     private String author;
+    private String bookFormat;
 
     public LibSystem(int id, int userid, String username, int bookid, String title, String author) {
         this.id = id;
@@ -17,6 +18,16 @@ public class LibSystem {
         this.bookid = bookid;
         this.title = title;
         this.author = author;
+    }
+
+    public LibSystem(int id, int userid, String username, int bookid, String title, String author, String bookFormat) {
+        this.id = id;
+        this.userid = userid;
+        this.username = username;
+        this.bookid = bookid;
+        this.title = title;
+        this.author = author;
+        this.bookFormat = bookFormat;
     }
 
     public int getId() {
@@ -67,17 +78,25 @@ public class LibSystem {
         this.author = author;
     }
 
+    public String getBookFormat() {
+        return bookFormat;
+    }
+
+    public void setBookFormat(String bookFormat) {
+        this.bookFormat = bookFormat;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LibSystem libSystem = (LibSystem) o;
-        return id == libSystem.id && userid == libSystem.userid && bookid == libSystem.bookid && Objects.equals(username, libSystem.username) && Objects.equals(title, libSystem.title) && Objects.equals(author, libSystem.author);
+        return id == libSystem.id && userid == libSystem.userid && bookid == libSystem.bookid && Objects.equals(username, libSystem.username) && Objects.equals(title, libSystem.title) && Objects.equals(author, libSystem.author) && Objects.equals(bookFormat, libSystem.bookFormat);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userid, username, bookid, title, author);
+        return Objects.hash(id, userid, username, bookid, title, author, bookFormat);
     }
 
     @Override
@@ -89,6 +108,7 @@ public class LibSystem {
                 ", bookid=" + bookid +
                 ", title='" + title + '\'' +
                 ", author='" + author + '\'' +
+                ", bookFormat='" + bookFormat + '\'' +
                 '}';
     }
 }
