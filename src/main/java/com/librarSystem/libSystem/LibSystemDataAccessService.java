@@ -54,45 +54,6 @@ public class LibSystemDataAccessService implements LibSystemDAO {
     }
 
     @Override
-    public ArrayList<String> getBookTitlesLoanedByUser(String username) {
-        String sql = """
-                SELECT title FROM libSystem
-                INNER JOIN users
-                ON users.id = libSystem.userid
-                INNER JOIN books
-                ON books.id = libSystem.bookid
-                WHERE lower(username) = ?
-                """;
-        return (ArrayList<String>) jdbcTemplate.query(sql, new BooksLoanedByUserResultSetExtractor(), username);
-    }
-
-    @Override
-    public ArrayList<String> getAuthorsLoanedByUser(String author) {
-        String sql = """
-                SELECT author FROM libSystem
-                INNER JOIN users
-                ON users.id = libSystem.userid
-                INNER JOIN books
-                ON books.id = libSystem.bookid
-                WHERE lower(username) = ?
-                """;
-        return (ArrayList<String>) jdbcTemplate.query(sql, new AuthorsLoanedByUserResultSetExtractor(), author);
-    }
-
-    @Override
-    public ArrayList<String> getBookFormatLoanedByUser(String bookFormat) {
-        String sql = """
-                SELECT bookFormat FROM libSystem
-                INNER JOIN users
-                ON users.id = libSystem.userid
-                INNER JOIN books
-                ON books.id = libSystem.bookid
-                WHERE lower(username) = ?
-                """;
-        return (ArrayList<String>) jdbcTemplate.query(sql, new BookFormatsLoanedByUserResultSetExtractor(), bookFormat);
-    }
-
-    @Override
     public ArrayList<String> selectLoansByTitleAndAuthorAndBookFormat(String title, String author, String bookFormat) {
         String sql = """
                 SELECT title FROM libSystem
@@ -102,18 +63,32 @@ public class LibSystemDataAccessService implements LibSystemDAO {
                 ON books.id = libSystem.bookid
                 WHERE lower(books.title) = ? AND lower(books.author) = ? AND lower(books.bookFormat) = ?
                 """;
-        return (ArrayList<String>) jdbcTemplate.query(sql, new BooksLoanedByUserResultSetExtractor(), title, author, bookFormat);
+        return (ArrayList<String>) jdbcTemplate.query(sql, new LibSystemResultSetExtractor(), title, author, bookFormat);
     }
 
     @Override
-    public int returnBook(int id, String title, String author, String bookFormat) {
+    public ArrayList<String> selectLoansByTitleAndAuthorAndBookFormatAndUser (String title, String author, String bookFormat,
+                                                                              String username) {
         String sql = """
-                DELETE FROM libSystem 
+                SELECT title FROM libSystem
+                INNER JOIN users
+                ON users.id = libSystem.userid
                 INNER JOIN books
                 ON books.id = libSystem.bookid
-                WHERE libSystem.id = ? AND books.title = ? AND book.author = ? AND books.bookFormat = ?
+                WHERE lower(books.title) = ? AND lower(books.author) = ? AND lower(books.bookFormat) = ? 
+                AND users.username = ?
                 """;
-        return jdbcTemplate.update(sql, id, title, author, bookFormat);
+        return (ArrayList<String>) jdbcTemplate.query(sql, new LibSystemResultSetExtractor(), title, author,
+                bookFormat, username);
+    }
+
+    @Override
+    public int returnBook(int id) {
+        String sql = """
+                DELETE FROM libSystem 
+                WHERE libSystem.id = ? 
+                """;
+        return jdbcTemplate.update(sql, id);
     }
 
     @Override

@@ -1,7 +1,8 @@
 CREATE TABLE books (id SERIAL PRIMARY KEY, title VARCHAR(255), author VARCHAR(255), bookFormat VARCHAR(255),
  numberOfCopies INT, copiesInUse INT DEFAULT 0, copiesAvailable INT, bookCover VARCHAR(255));
 
-CREATE TABLE users (id SERIAL PRIMARY KEY, username VARCHAR(255), password VARCHAR(255), librarian BOOLEAN DEFAULT 'false');
+CREATE TABLE users (id SERIAL PRIMARY KEY, username VARCHAR(255), password VARCHAR(255),
+ librarian BOOLEAN DEFAULT 'false', totalLoans int DEFAULT 5, currentLoans int DEFAULT 0, remainingLoans int);
 
 CREATE TABLE libSystem (id SERIAL PRIMARY KEY, userid INT REFERENCES users(id), bookid INT REFERENCES books(id));
 
@@ -22,9 +23,9 @@ INSERT INTO books (title, author, bookFormat, numberOfCopies, copiesAvailable, b
 INSERT INTO books (title, author, bookFormat, numberOfCopies, copiesAvailable, bookCover) VALUES ('Stalking Jack the Ripper', 'Kerri
 Maniscalco', 'eBook', 6, 6, 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1530823449l/40727470._SY475_.jpg');
 
-INSERT INTO users (username, password, librarian) VALUES ('user1', 'password', 'false');
-INSERT INTO users (username, password, librarian) VALUES ('janedoe', 'enter', 'false');
-INSERT INTO users (username, password, librarian) VALUES ('thelibrarian', 'password', 'true');
+INSERT INTO users (username, password, librarian, currentLoans, remainingLoans) VALUES ('user1', 'password', 'false', 1, 4);
+INSERT INTO users (username, password, librarian, currentLoans, remainingLoans) VALUES ('janedoe', 'enter', 'false', 2, 3);
+INSERT INTO users (username, password, librarian, currentLoans, remainingLoans) VALUES ('thelibrarian', 'password', 'true', 0, 5);
 
 INSERT INTO libSystem (userid, bookid) VALUES (1, 1);
 INSERT INTO libSystem (userid, bookid) VALUES (2, 2);

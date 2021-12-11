@@ -1,5 +1,7 @@
 package com.librarSystem.users;
 
+import com.librarSystem.users.resultSetExtractors.TotalLoansResultSetExtractor;
+import com.librarSystem.users.resultSetExtractors.UserIdResultSetExtractor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -67,4 +69,31 @@ public class UsersDataAccessService implements UsersDAO{
                 """;
         return jdbcTemplate.update(sql, users.getUsername(), users.getPassword(), users.getLibrarian());
     }
+
+    @Override
+    public Object checkTotalLoans(String username){
+        String sql = """
+                SELECT totalLoans FROM users
+                WHERE username = ?;
+                """;
+        return jdbcTemplate.query(sql, new TotalLoansResultSetExtractor(), username);
+    }
+
+    @Override
+    public int updateLoans(String username, int currentLoans, int remainingLoans){
+        String sql = """
+                UPDATE users SET currentLoans = ?, remainingLoans = ?
+                WHERE username = ?
+                """;
+       return jdbcTemplate.update(sql, currentLoans, remainingLoans, username);
+    }
+
+//    @Override
+//    public int updateRemainingLoans(String username, int remainingLoans){
+//        String sql = """
+//                UPDATE users SET remainingLoans = ?
+//                WHERE username = ?
+//                """;
+//        return jdbcTemplate.update(sql, remainingLoans, username);
+//    }
 }

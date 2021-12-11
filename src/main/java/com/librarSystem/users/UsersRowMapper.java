@@ -13,7 +13,10 @@ public class UsersRowMapper implements RowMapper<Users> {
                 rs.getInt("id"),
                 rs.getString("username"),
                 rs.getString("password"),
-                rs.getBoolean("librarian")
+                rs.getBoolean("librarian"),
+                rs.getInt("totalLoans"),
+                rs.getInt("currentLoans"),
+                rs.getInt("remainingLoans")
         );
         return users;
     }

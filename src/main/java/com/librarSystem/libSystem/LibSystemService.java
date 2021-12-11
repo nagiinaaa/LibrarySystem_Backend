@@ -2,6 +2,7 @@ package com.librarSystem.libSystem;
 
 import com.librarSystem.books.BooksService;
 import com.librarSystem.exception.ResourceNotFound;
+import com.librarSystem.users.Users;
 import com.librarSystem.users.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,38 +43,47 @@ public class LibSystemService {
         return libSystemDAO.selectLoansById(id);
     }
 
-    public ArrayList<String> getBookTitlesLoanedByUser(String username) {
-        return libSystemDAO.getBookTitlesLoanedByUser(username);
-    }
-
-    public ArrayList<String> getAuthorsLoanedByUser(String author) {
-        return libSystemDAO.getAuthorsLoanedByUser(author);
-    }
-
-    public ArrayList<String> getBookFormatLoanedByUser(String bookFormat) {
-        return libSystemDAO.getBookFormatLoanedByUser(bookFormat);
+    public ArrayList<String> selectLoansByTitleAndAuthorAndBookFormatAndUser(String title, String author,
+                                                                             String bookFormat, String username){
+        return libSystemDAO.selectLoansByTitleAndAuthorAndBookFormatAndUser(title, author, bookFormat, username);
     }
 
     public void updateCopyNumbers (String title, String author, String bookFormat){
-        ArrayList<String> checkIfLoaned = selectLoansByTitleAndAuthorAndBookFormat(title, author, bookFormat);
-        if(checkIfLoaned.size() > 0){
+        ArrayList<String> checkBookLoaned = selectLoansByTitleAndAuthorAndBookFormat(title, author, bookFormat);
+        if(checkBookLoaned.size() > 0){
             int availableCopies = Integer.parseInt(booksService.checkTotalCopies(title, author, bookFormat).toString()
-                    .replace("[", "").replace("]", "")) - checkIfLoaned.size();
+                    .replace("[", "").replace("]", "")) - checkBookLoaned.size();
             booksService.updateAvailableCopies(title, author, availableCopies, bookFormat);
-            booksService.updateCopiesInUse(title, author, checkIfLoaned.size(), bookFormat);
+            booksService.updateCopiesInUse(title, author, checkBookLoaned.size(), bookFormat);
+
         } else {
             int availableCopies = Integer.parseInt(booksService.checkTotalCopies(title, author, bookFormat).toString()
-                    .replace("[", "").replace("]", "")) - checkIfLoaned.size();
+                    .replace("[", "").replace("]", "")) - checkBookLoaned.size();
             booksService.updateAvailableCopies(title, author, availableCopies, bookFormat);
             booksService.updateCopiesInUse(title, author,0, bookFormat);
         }
     }
 
-    public void returnBook(int id, String title, String author, String bookFormat){
+    public void updateLoanNumbers (String username){
+        List<LibSystem> checkLoansNumber = selectLoansByUser(username);
+        if(checkLoansNumber.size() > 0) {
+            int remainingLoans = Integer.parseInt(usersService.checkTotalLoans(username).toString().
+                    replace("[", "").replace("]", "")) - checkLoansNumber.size();
+            usersService.updateLoans(username, checkLoansNumber.size(), remainingLoans);
+
+        } else {
+            int remainingLoans = Integer.parseInt(usersService.checkTotalLoans(username).toString().
+                    replace("[", "").replace("]", ""));
+            usersService.updateLoans(username, 0, remainingLoans);
+        }
+    }
+
+    public void returnBook(int id, String username, String title, String author, String bookFormat){
         if(!libSystemDAO.selectLoansById(id).isEmpty() &&
                 !selectLoansByTitleAndAuthorAndBookFormat(title, author, bookFormat).isEmpty()){
-            libSystemDAO.returnBook(id, title, author, bookFormat);
+            libSystemDAO.returnBook(id);
             updateCopyNumbers(title, author, bookFormat);
+            updateLoanNumbers(username);
         } else if (libSystemDAO.selectLoansById(id).isEmpty() ||
                 !selectLoansByTitleAndAuthorAndBookFormat(title, author, bookFormat).isEmpty()){
             throw new ResourceNotFound("no loan with id " + id + " for " + title + " by " +author+ "exists");
@@ -84,21 +94,21 @@ public class LibSystemService {
         int totalCopies = Integer.parseInt(booksService.checkTotalCopies(title, author, bookFormat).toString()
                 .replace("[", "").replace("]", ""));
         int totalLoaned = selectLoansByTitleAndAuthorAndBookFormat(title, author, bookFormat).size();
-        ArrayList<String> titlesLoanedByUser = getBookTitlesLoanedByUser(username);
-        ArrayList<String> authorsLoanedByUser = getAuthorsLoanedByUser(username);
-        ArrayList<String> formatLoanedByUser = getBookFormatLoanedByUser(username);
-        boolean checkIfTitleOnLoan = titlesLoanedByUser.stream().anyMatch(title::equalsIgnoreCase);
-        boolean checkIfAuthorOnLoan = authorsLoanedByUser.stream().anyMatch(author::equalsIgnoreCase);
-        boolean checkIfFormatOnLoan = formatLoanedByUser.stream().anyMatch(bookFormat::equalsIgnoreCase);
+
+        ArrayList<String> checkIfLoanedAlready = selectLoansByTitleAndAuthorAndBookFormatAndUser(title, author, bookFormat,
+                username);
+
+        int checkLoanSlots = Integer.parseInt(usersService.checkTotalLoans(username).toString()
+                .replace("[", "").replace("]", ""));
+        List<LibSystem> checkCurrentLoans = selectLoansByUser(username);
 
 
-
-        if(titlesLoanedByUser.size() > 6){
+        if(checkCurrentLoans.size() >= checkLoanSlots){
             throw new ResourceNotFound("You've reached your borrow limit, please return a book before trying again");
         }
         else if (totalCopies == totalLoaned){
             throw new ResourceNotFound("no more copies available for loan, please try again later");
-        } else if (checkIfTitleOnLoan && checkIfAuthorOnLoan && checkIfFormatOnLoan) {
+        } else if (checkIfLoanedAlready.size() > 0) {
             throw new ResourceNotFound("you're already borrowing the " +bookFormat+ " of " +title+ " by " +author);
         }
 
@@ -110,6 +120,7 @@ public class LibSystemService {
             libSystemDAO.borrowBook(username, title, idOfUser, idOfBook);
 
             updateCopyNumbers(title, author, bookFormat);
+            updateLoanNumbers(username);
         }
     }
 

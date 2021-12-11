@@ -57,4 +57,13 @@ public class UsersService {
         return usersDAO.registerUser(users);
     }
 
+    // add logic to stop users having the same username
+
+    public Object checkTotalLoans(String username){
+        return usersDAO.checkTotalLoans(username);
+    }
+
+    public int updateLoans(String username, int currentLoans, int remianingLoans) {
+        return usersDAO.updateLoans(username, currentLoans, remianingLoans);
+    }
 }

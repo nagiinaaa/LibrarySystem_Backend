@@ -1,4 +1,4 @@
-package com.librarSystem.users;
+package com.librarSystem.users.resultSetExtractors;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -7,15 +7,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class UserIdResultSetExtractor implements ResultSetExtractor {
+public class TotalLoansResultSetExtractor implements ResultSetExtractor {
 
     @Override
     public ArrayList<Integer> extractData(ResultSet rs) throws SQLException,
             DataAccessException {
-        ArrayList<Integer> id = new ArrayList<Integer>();
+        ArrayList<Integer> totalLoans = new ArrayList<Integer>();
         while (rs.next()){
-            id.add(rs.getInt("id"));
+            totalLoans.add(rs.getInt("totalLoans"));
         }
-        return id;
+        return totalLoans;
     }
 }

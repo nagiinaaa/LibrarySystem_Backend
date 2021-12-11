@@ -32,9 +32,9 @@ public class LibSystemController {
         return libSystemService.selectLoanById(id);
     }
 
-    @DeleteMapping("{id}/{title}/{author}/{bookFormat}")
-    public void returnBook(@PathVariable("id") int id, @PathVariable("title") String title,  @PathVariable("author") String author, @PathVariable("bookFormat") String bookFormat){
-        libSystemService.returnBook(id, title, author, bookFormat);
+    @DeleteMapping("{id}/{username}/{title}/{author}/{bookFormat}")
+    public void returnBook(@PathVariable("id") int id, @PathVariable("username") String username, @PathVariable("title") String title,  @PathVariable("author") String author, @PathVariable("bookFormat") String bookFormat){
+        libSystemService.returnBook(id, username, title, author, bookFormat);
     }
 
     @PostMapping("{username}/{title}/{author}/{bookFormat}")
@@ -42,5 +42,6 @@ public class LibSystemController {
                          @PathVariable("author") String author, @PathVariable("bookFormat") String bookFormat){
         libSystemService.borrowBook(username, title, author, bookFormat);
     }
+
 
 }
