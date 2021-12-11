@@ -37,17 +37,6 @@ public class UsersDataAccessService implements UsersDAO{
     }
 
     @Override
-    public Optional<Users> selectUserByUsername(String username){
-        String sql = """
-                SELECT * FROM users
-                WHERE username = ?;
-                """;
-        return jdbcTemplate.query(sql, new UsersRowMapper(), username)
-                .stream()
-                .findFirst();
-    }
-
-    @Override
     public Object getUserId(String username){
         String sql = """
                 SELECT id FROM users

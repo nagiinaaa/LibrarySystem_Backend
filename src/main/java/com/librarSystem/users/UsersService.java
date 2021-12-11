@@ -32,13 +32,6 @@ public class UsersService {
         return usersDAO.selectUserById(id);
     }
 
-    public Optional<Users> selectUserByUsername(String username){
-        if(usersDAO.selectUserByUsername(username).isEmpty()) {
-            throw new ResourceNotFound("no account with the username " +username+ " found");
-        }
-        return usersDAO.selectUserByUsername(username);
-    }
-
     public Object getUserId(String username){
         if(usersDAO.getUserId(username).equals(null)){
             throw new ResourceNotFound(username + " doesn't exist");

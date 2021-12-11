@@ -9,7 +9,6 @@ import java.util.Optional;
 public interface UsersDAO {
     List<Users> getAllUsers();
     Optional<Users> selectUserById(int id);
-    Optional<Users> selectUserByUsername(String username);
     Object getUserId(String username);
     int deleteUser(int id);
     int updateUser(int id, Users users);
