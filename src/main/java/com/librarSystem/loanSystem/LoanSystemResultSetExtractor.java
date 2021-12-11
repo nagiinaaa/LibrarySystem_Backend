@@ -1,4 +1,4 @@
-package com.librarSystem.libSystem;
+package com.librarSystem.loanSystem;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class LibSystemResultSetExtractor implements ResultSetExtractor {
+public class LoanSystemResultSetExtractor implements ResultSetExtractor {
 
     @Override
     public ArrayList<String> extractData(ResultSet rs) throws SQLException,

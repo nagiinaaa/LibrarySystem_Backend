@@ -15,7 +15,5 @@ public interface UsersDAO {
     int registerUser(Users users);
     Object checkTotalLoans(String username);
     int updateLoans(String username, int currentLoans, int remainingLoans);
-//    int updateRemainingLoans(String username, int remainingLoans);
-
-
+    List<Users> checkIfLibrarian(String username);
 }

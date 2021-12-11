@@ -1,4 +1,4 @@
-package com.librarSystem.libSystem;
+package com.librarSystem.loanSystem;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -7,86 +7,86 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository("libSystem")
-public class LibSystemDataAccessService implements LibSystemDAO {
+public class LoanSystemDataAccessService implements LoanSystemDAO {
 
     private JdbcTemplate jdbcTemplate;
 
-    public LibSystemDataAccessService(JdbcTemplate jdbcTemplate) {
+    public LoanSystemDataAccessService(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public List<LibSystem> checkAllLoans() {
+    public List<LoanSystem> checkAllLoans() {
         String sql = """
-                SELECT * FROM libSystem
+                SELECT * FROM loanSystem
                 INNER JOIN users
-                ON users.id = libSystem.userid
+                ON users.id = loanSystem.userid
                 INNER JOIN books
-                ON books.id = libSystem.bookid
+                ON books.id = loanSystem.bookid
                 """;
-        return jdbcTemplate.query(sql, new LibSystemRowMapper());
+        return jdbcTemplate.query(sql, new LoanSystemRowMapper());
     }
 
     @Override
-    public List<LibSystem> selectLoansByUser(String username) {
+    public List<LoanSystem> selectLoansByUser(String username) {
         String sql = """
-                SELECT * FROM libSystem
+                SELECT * FROM loanSystem
                 INNER JOIN users
-                ON users.id = libSystem.userid
+                ON users.id = loanSystem.userid
                 INNER JOIN books
-                ON books.id = libSystem.bookid
+                ON books.id = loanSystem.bookid
                 WHERE lower(username) = ?
                 """;
-        return jdbcTemplate.query(sql, new LibSystemRowMapper(), username);
+        return jdbcTemplate.query(sql, new LoanSystemRowMapper(), username);
     }
 
     @Override
-    public List<LibSystem> selectLoansById(int id) {
+    public List<LoanSystem> selectLoansById(int id) {
         String sql = """
-                SELECT * FROM libSystem
+                SELECT * FROM loanSystem
                 INNER JOIN users
-                ON users.id = libSystem.userid
+                ON users.id = loanSystem.userid
                 INNER JOIN books
-                ON books.id = libSystem.bookid
-                WHERE libSystem.id = ?
+                ON books.id = loanSystem.bookid
+                WHERE loanSystem.id = ?
                 """;
-        return jdbcTemplate.query(sql, new LibSystemRowMapper(), id);
+        return jdbcTemplate.query(sql, new LoanSystemRowMapper(), id);
     }
 
     @Override
     public ArrayList<String> selectLoansByTitleAndAuthorAndBookFormat(String title, String author, String bookFormat) {
         String sql = """
-                SELECT title FROM libSystem
+                SELECT title FROM loanSystem
                 INNER JOIN users
-                ON users.id = libSystem.userid
+                ON users.id = loanSystem.userid
                 INNER JOIN books
-                ON books.id = libSystem.bookid
+                ON books.id = loanSystem.bookid
                 WHERE lower(books.title) = ? AND lower(books.author) = ? AND lower(books.bookFormat) = ?
                 """;
-        return (ArrayList<String>) jdbcTemplate.query(sql, new LibSystemResultSetExtractor(), title, author, bookFormat);
+        return (ArrayList<String>) jdbcTemplate.query(sql, new LoanSystemResultSetExtractor(), title, author, bookFormat);
     }
 
     @Override
     public ArrayList<String> selectLoansByTitleAndAuthorAndBookFormatAndUser (String title, String author, String bookFormat,
                                                                               String username) {
         String sql = """
-                SELECT title FROM libSystem
+                SELECT title FROM loanSystem
                 INNER JOIN users
-                ON users.id = libSystem.userid
+                ON users.id = loanSystemm.userid
                 INNER JOIN books
-                ON books.id = libSystem.bookid
+                ON books.id = loanSystem.bookid
                 WHERE lower(books.title) = ? AND lower(books.author) = ? AND lower(books.bookFormat) = ? 
                 AND users.username = ?
                 """;
-        return (ArrayList<String>) jdbcTemplate.query(sql, new LibSystemResultSetExtractor(), title, author,
+        return (ArrayList<String>) jdbcTemplate.query(sql, new LoanSystemResultSetExtractor(), title, author,
                 bookFormat, username);
     }
 
     @Override
     public int returnBook(int id) {
         String sql = """
-                DELETE FROM libSystem 
-                WHERE libSystem.id = ? 
+                DELETE FROM loanSystem
+                WHERE loanSystem.id = ? 
                 """;
         return jdbcTemplate.update(sql, id);
     }
@@ -94,7 +94,7 @@ public class LibSystemDataAccessService implements LibSystemDAO {
     @Override
     public int borrowBook(String username, String title, int userid, int bookid) {
         String sql = """
-                INSERT INTO libSystem (userid, bookid)
+                INSERT INTO loanSystem (userid, bookid)
                 VALUES (?, ?);
                 """;
         return jdbcTemplate.update(sql, userid, bookid);

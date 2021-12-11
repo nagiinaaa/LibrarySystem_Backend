@@ -1,6 +1,7 @@
 package com.librarSystem.books;
 
 import com.librarSystem.exception.ResourceNotFound;
+import com.librarSystem.users.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,10 +11,12 @@ import java.util.List;
 public class BooksService {
 
     private BooksDAO booksDAO;
+    private UsersService usersService;
 
     @Autowired
-    public BooksService(BooksDAO booksDAO) {
+    public BooksService(BooksDAO booksDAO, UsersService usersService) {
         this.booksDAO = booksDAO;
+        this.usersService = usersService;
     }
 
     public List<Books> getAllBooks(){
@@ -48,6 +51,13 @@ public class BooksService {
         return booksDAO.findBookId(title, author, bookFormat);
     }
 
+    // add logic to update, delete and add books so only a librarian can use them.
+    // add check if librarian method in users.
+
+//    public int deleteBook (int id, String username){
+//
+//    }
+
     public int updateAvailableCopies(String title, String author, int copies, String bookFormat){
         return booksDAO.updateAvailableCopies(title, author, copies, bookFormat);
     }
@@ -56,5 +66,4 @@ public class BooksService {
         return booksDAO.updateCopiesInUse(title, author, copies, bookFormat);
     }
 
-    // add logic to update, delete and add books so only a librarian can use them.
 }

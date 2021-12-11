@@ -64,4 +64,8 @@ public class UsersService {
     public int updateLoans(String username, int currentLoans, int remianingLoans) {
         return usersDAO.updateLoans(username, currentLoans, remianingLoans);
     }
+
+    public List<Users> checkIfLibrarian (String username){
+        return usersDAO.checkIfLibrarian(username);
+    }
 }

@@ -1,8 +1,8 @@
-package com.librarSystem.libSystem;
+package com.librarSystem.loanSystem;
 
 import java.util.Objects;
 
-public class LibSystem {
+public class LoanSystem {
     private int id;
     private int userid;
     private String username;
@@ -11,7 +11,7 @@ public class LibSystem {
     private String author;
     private String bookFormat;
 
-    public LibSystem(int id, int userid, String username, int bookid, String title, String author) {
+    public LoanSystem(int id, int userid, String username, int bookid, String title, String author) {
         this.id = id;
         this.userid = userid;
         this.username = username;
@@ -20,7 +20,7 @@ public class LibSystem {
         this.author = author;
     }
 
-    public LibSystem(int id, int userid, String username, int bookid, String title, String author, String bookFormat) {
+    public LoanSystem(int id, int userid, String username, int bookid, String title, String author, String bookFormat) {
         this.id = id;
         this.userid = userid;
         this.username = username;
@@ -90,7 +90,7 @@ public class LibSystem {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        LibSystem libSystem = (LibSystem) o;
+        LoanSystem libSystem = (LoanSystem) o;
         return id == libSystem.id && userid == libSystem.userid && bookid == libSystem.bookid && Objects.equals(username, libSystem.username) && Objects.equals(title, libSystem.title) && Objects.equals(author, libSystem.author) && Objects.equals(bookFormat, libSystem.bookFormat);
     }
 

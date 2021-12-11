@@ -1,51 +1,47 @@
-package com.librarSystem.libSystem;
+package com.librarSystem.loanSystem;
 
 import com.librarSystem.books.BooksService;
 import com.librarSystem.exception.ResourceNotFound;
-import com.librarSystem.users.Users;
 import com.librarSystem.users.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.function.Predicate;
 
 @Service
-public class LibSystemService {
+public class LoanSystemService {
 
-    private LibSystemDAO libSystemDAO;
+    private LoanSystemDAO loanSystemDAO;
     private BooksService booksService;
     private UsersService usersService;
 
     @Autowired
-    public LibSystemService(LibSystemDAO libSystemDAO, BooksService booksService, UsersService usersService) {
-        this.libSystemDAO = libSystemDAO;
+    public LoanSystemService(LoanSystemDAO loanSystemDAO, BooksService booksService, UsersService usersService) {
+        this.loanSystemDAO = loanSystemDAO;
         this.booksService = booksService;
         this.usersService = usersService;
     }
 
-    public List<LibSystem> checkAllLoans(){
-        return libSystemDAO.checkAllLoans();
+    public List<LoanSystem> checkAllLoans(){
+        return loanSystemDAO.checkAllLoans();
     }
 
-    public List<LibSystem> selectLoansByUser(String username){
-        return libSystemDAO.selectLoansByUser(username);
+    public List<LoanSystem> selectLoansByUser(String username){
+        return loanSystemDAO.selectLoansByUser(username);
     }
 
     public ArrayList<String> selectLoansByTitleAndAuthorAndBookFormat(String title, String author, String bookFormat){
-        return libSystemDAO.selectLoansByTitleAndAuthorAndBookFormat(title, author, bookFormat);
+        return loanSystemDAO.selectLoansByTitleAndAuthorAndBookFormat(title, author, bookFormat);
     }
 
-    public List<LibSystem> selectLoanById(int id){
-        return libSystemDAO.selectLoansById(id);
+    public List<LoanSystem> selectLoanById(int id){
+        return loanSystemDAO.selectLoansById(id);
     }
 
     public ArrayList<String> selectLoansByTitleAndAuthorAndBookFormatAndUser(String title, String author,
                                                                              String bookFormat, String username){
-        return libSystemDAO.selectLoansByTitleAndAuthorAndBookFormatAndUser(title, author, bookFormat, username);
+        return loanSystemDAO.selectLoansByTitleAndAuthorAndBookFormatAndUser(title, author, bookFormat, username);
     }
 
     public void updateCopyNumbers (String title, String author, String bookFormat){
@@ -65,7 +61,7 @@ public class LibSystemService {
     }
 
     public void updateLoanNumbers (String username){
-        List<LibSystem> checkLoansNumber = selectLoansByUser(username);
+        List<LoanSystem> checkLoansNumber = selectLoansByUser(username);
         if(checkLoansNumber.size() > 0) {
             int remainingLoans = Integer.parseInt(usersService.checkTotalLoans(username).toString().
                     replace("[", "").replace("]", "")) - checkLoansNumber.size();
@@ -79,12 +75,12 @@ public class LibSystemService {
     }
 
     public void returnBook(int id, String username, String title, String author, String bookFormat){
-        if(!libSystemDAO.selectLoansById(id).isEmpty() &&
+        if(!loanSystemDAO.selectLoansById(id).isEmpty() &&
                 !selectLoansByTitleAndAuthorAndBookFormat(title, author, bookFormat).isEmpty()){
-            libSystemDAO.returnBook(id);
+            loanSystemDAO.returnBook(id);
             updateCopyNumbers(title, author, bookFormat);
             updateLoanNumbers(username);
-        } else if (libSystemDAO.selectLoansById(id).isEmpty() ||
+        } else if (loanSystemDAO.selectLoansById(id).isEmpty() ||
                 !selectLoansByTitleAndAuthorAndBookFormat(title, author, bookFormat).isEmpty()){
             throw new ResourceNotFound("no loan with id " + id + " for " + title + " by " +author+ "exists");
         }
@@ -100,7 +96,7 @@ public class LibSystemService {
 
         int checkLoanSlots = Integer.parseInt(usersService.checkTotalLoans(username).toString()
                 .replace("[", "").replace("]", ""));
-        List<LibSystem> checkCurrentLoans = selectLoansByUser(username);
+        List<LoanSystem> checkCurrentLoans = selectLoansByUser(username);
 
 
         if(checkCurrentLoans.size() >= checkLoanSlots){
@@ -117,7 +113,7 @@ public class LibSystemService {
                     .replace("[", "").replace("]", ""));
             int idOfBook = Integer.parseInt(booksService.findBookId(title, author, bookFormat).toString()
                     .replace("[", "").replace("]", ""));
-            libSystemDAO.borrowBook(username, title, idOfUser, idOfBook);
+            loanSystemDAO.borrowBook(username, title, idOfUser, idOfBook);
 
             updateCopyNumbers(title, author, bookFormat);
             updateLoanNumbers(username);

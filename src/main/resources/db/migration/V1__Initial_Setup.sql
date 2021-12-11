@@ -4,7 +4,7 @@ CREATE TABLE books (id SERIAL PRIMARY KEY, title VARCHAR(255), author VARCHAR(25
 CREATE TABLE users (id SERIAL PRIMARY KEY, username VARCHAR(255) UNIQUE, password VARCHAR(255),
  librarian BOOLEAN DEFAULT 'false', totalLoans int DEFAULT 5, currentLoans int DEFAULT 0, remainingLoans int DEFAULT 5);
 
-CREATE TABLE libSystem (id SERIAL PRIMARY KEY, userid INT REFERENCES users(id), bookid INT REFERENCES books(id));
+CREATE TABLE loanSystem (id SERIAL PRIMARY KEY, userid INT REFERENCES users(id), bookid INT REFERENCES books(id));
 
 INSERT INTO books (title, author, bookFormat, numberOfCopies, copiesInUse, copiesAvailable, bookCover) VALUES ('The Diviners', 'Libba Bray', 'eBook',
  2, 1, 1, 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1350039340l/15927006.jpg');
@@ -27,6 +27,6 @@ INSERT INTO users (username, password, librarian, currentLoans, remainingLoans) 
 INSERT INTO users (username, password, librarian, currentLoans, remainingLoans) VALUES ('janedoe', 'enter', 'false', 2, 3);
 INSERT INTO users (username, password, librarian, currentLoans, remainingLoans) VALUES ('thelibrarian', 'password', 'true', 0, 5);
 
-INSERT INTO libSystem (userid, bookid) VALUES (1, 1);
-INSERT INTO libSystem (userid, bookid) VALUES (2, 2);
-INSERT INTO libSystem (userid, bookid) VALUES (2, 3);
+INSERT INTO loanSystem (userid, bookid) VALUES (1, 1);
+INSERT INTO loanSystem (userid, bookid) VALUES (2, 2);
+INSERT INTO loanSystem (userid, bookid) VALUES (2, 3);

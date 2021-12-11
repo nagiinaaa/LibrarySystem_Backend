@@ -81,6 +81,16 @@ public class BooksDataAccessService implements BooksDAO {
     }
 
     @Override
+    public int addBook (Books books){
+        String sql = """
+                INSERT INTO books (title, author, bookFormat, numberOfCopies, copiesAvailable, bookCover) 
+                VALUES (?, ?, ?, ?, ?, ?)
+                """;
+        return jdbcTemplate.update(sql, books.getTitle(), books.getAuthor(), books.getBookFormat(),
+                books.getNumberOfCopies(), books.getCopiesAvailable(), books.getBookCover());
+    }
+
+    @Override
     public int updateAvailableCopies (String title, String author, int copies, String bookFormat){
         String sql = """
                 UPDATE books SET copiesAvailable = ?

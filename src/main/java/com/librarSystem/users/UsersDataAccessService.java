@@ -40,7 +40,7 @@ public class UsersDataAccessService implements UsersDAO{
     public Object getUserId(String username){
         String sql = """
                 SELECT id FROM users
-                WHERE username = ?;
+                WHERE lower(username) = ?;
                 """;
         return jdbcTemplate.query(sql, new UserIdResultSetExtractor(), username);
     }
@@ -74,7 +74,7 @@ public class UsersDataAccessService implements UsersDAO{
     public Object checkTotalLoans(String username){
         String sql = """
                 SELECT totalLoans FROM users
-                WHERE username = ?;
+                WHERE lower(username) = ?;
                 """;
         return jdbcTemplate.query(sql, new TotalLoansResultSetExtractor(), username);
     }
@@ -83,17 +83,18 @@ public class UsersDataAccessService implements UsersDAO{
     public int updateLoans(String username, int currentLoans, int remainingLoans){
         String sql = """
                 UPDATE users SET currentLoans = ?, remainingLoans = ?
-                WHERE username = ?
+                WHERE lower(username) = ?
                 """;
        return jdbcTemplate.update(sql, currentLoans, remainingLoans, username);
     }
 
-//    @Override
-//    public int updateRemainingLoans(String username, int remainingLoans){
-//        String sql = """
-//                UPDATE users SET remainingLoans = ?
-//                WHERE username = ?
-//                """;
-//        return jdbcTemplate.update(sql, remainingLoans, username);
-//    }
+    @Override
+    public List<Users> checkIfLibrarian (String username){
+        String sql = """
+                SELECT * FROM users
+                WHERE librarian = 'true' AND lower(username) = ?;
+                """;
+        return jdbcTemplate.query(sql, new UsersRowMapper(), username);
+
+    }
 }

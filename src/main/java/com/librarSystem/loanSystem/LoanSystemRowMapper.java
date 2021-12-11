@@ -1,15 +1,15 @@
-package com.librarSystem.libSystem;
+package com.librarSystem.loanSystem;
 
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class LibSystemRowMapper implements RowMapper<LibSystem> {
+public class LoanSystemRowMapper implements RowMapper<LoanSystem> {
 
     @Override
-    public LibSystem mapRow(ResultSet rs, int rowNum) throws SQLException {
-        LibSystem libSystem = new LibSystem(
+    public LoanSystem mapRow(ResultSet rs, int rowNum) throws SQLException {
+        LoanSystem loanSystem = new LoanSystem(
                 rs.getInt("id"),
                 rs.getInt("userid"),
                 rs.getString("username"),
@@ -18,7 +18,7 @@ public class LibSystemRowMapper implements RowMapper<LibSystem> {
                 rs.getString("author"),
                 rs.getString("bookFormat")
         );
-        return libSystem;
+        return loanSystem;
     }
 }
 
