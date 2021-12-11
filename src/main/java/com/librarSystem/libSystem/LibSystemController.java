@@ -42,6 +42,4 @@ public class LibSystemController {
                          @PathVariable("author") String author, @PathVariable("bookFormat") String bookFormat){
         libSystemService.borrowBook(username, title, author, bookFormat);
     }
-
-
 }

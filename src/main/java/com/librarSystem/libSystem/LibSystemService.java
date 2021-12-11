@@ -124,9 +124,7 @@ public class LibSystemService {
         }
     }
 
-// fix error when two books with same title. - make sure everything checks for bookformat and not just title.
 
-    // add logic to allow users to pick format of book
     // maybe add a tbr and read table
     // could also add a reviews function;
 

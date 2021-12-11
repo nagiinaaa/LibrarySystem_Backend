@@ -1,8 +1,8 @@
 CREATE TABLE books (id SERIAL PRIMARY KEY, title VARCHAR(255), author VARCHAR(255), bookFormat VARCHAR(255),
  numberOfCopies INT, copiesInUse INT DEFAULT 0, copiesAvailable INT, bookCover VARCHAR(255));
 
-CREATE TABLE users (id SERIAL PRIMARY KEY, username VARCHAR(255), password VARCHAR(255),
- librarian BOOLEAN DEFAULT 'false', totalLoans int DEFAULT 5, currentLoans int DEFAULT 0, remainingLoans int);
+CREATE TABLE users (id SERIAL PRIMARY KEY, username VARCHAR(255) UNIQUE, password VARCHAR(255),
+ librarian BOOLEAN DEFAULT 'false', totalLoans int DEFAULT 5, currentLoans int DEFAULT 0, remainingLoans int DEFAULT 5);
 
 CREATE TABLE libSystem (id SERIAL PRIMARY KEY, userid INT REFERENCES users(id), bookid INT REFERENCES books(id));
 
