@@ -43,7 +43,7 @@ public class BooksService {
 
     public List<Books> getBooksById(int id){
         if(booksDAO.getBooksById(id).isEmpty()){
-            throw new ResourceNotFound("no books with the title " +id+ " found");
+            throw new ResourceNotFound("no books with the id " +id+ " found");
         }
         return booksDAO.getBooksById(id);
     }
