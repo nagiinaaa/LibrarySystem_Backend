@@ -4,6 +4,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository("reviews")
 public class ReviewsDataAccessService implements ReviewsDAO{
@@ -38,6 +39,21 @@ public class ReviewsDataAccessService implements ReviewsDAO{
                 WHERE reviews.userid = ?
                 """;
         return jdbcTemplate.query(sql, new ReviewsRowMapper(), userid);
+    }
+
+    @Override
+    public Optional<Reviews> getReviewById (int id) {
+        String sql = """
+                SELECT * FROM reviews
+                INNER JOIN users
+                ON users.id = reviews.userid
+                INNER JOIN books
+                ON books.id = reviews.bookid
+                WHERE reviews.id = ?
+                """;
+        return jdbcTemplate.query(sql, new ReviewsRowMapper(), id)
+                .stream()
+                .findFirst();
     }
 
     @Override
