@@ -28,7 +28,7 @@ public class UsersController {
     }
 
     @DeleteMapping("{id}")
-    public int deletUser (@PathVariable("id") int id){
+    public int deleteUser (@PathVariable("id") int id){
         return usersService.deleteUser(id);
     }
 
@@ -41,6 +41,5 @@ public class UsersController {
     public int registerUser (@RequestBody Users users){
         return usersService.registerUser(users);
     }
-
 
 }

@@ -1,5 +1,8 @@
 package com.librarSystem.books;
 
+import com.librarSystem.books.resultSetExtractors.BookIdResultSetExtractor;
+import com.librarSystem.books.resultSetExtractors.CopiesInUseResultSetExtractor;
+import com.librarSystem.books.resultSetExtractors.NumberOfCopiesResultSetExtractor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -44,12 +47,31 @@ public class BooksDataAccessService implements BooksDAO {
     }
 
     @Override
+    public List<Books> getBooksById(int id){
+        String sql = """
+                SELECT * FROM books
+                WHERE id = ?;
+                """;
+        return jdbcTemplate.query(sql, new BooksRowMapper(), id);
+
+    }
+
+    @Override
     public Object checkTotalCopies(String title, String author, String bookFormat){
         String sql = """
                 SELECT * FROM books
                 WHERE lower(title) = ? AND lower(author) = ? AND lower(bookFormat) = ?;
                 """;
         return jdbcTemplate.query(sql, new NumberOfCopiesResultSetExtractor(), title, author, bookFormat);
+    }
+
+    @Override
+    public Object checkCopiesInUse (int id){
+        String sql = """
+                SELECT * FROM books
+                WHERE id = ?
+                """;
+        return jdbcTemplate.query(sql, new CopiesInUseResultSetExtractor(), id);
     }
 
     @Override
@@ -83,11 +105,11 @@ public class BooksDataAccessService implements BooksDAO {
     @Override
     public int addBook (Books books){
         String sql = """
-                INSERT INTO books (title, author, bookFormat, numberOfCopies, copiesAvailable, bookCover) 
-                VALUES (?, ?, ?, ?, ?, ?)
+                INSERT INTO books (title, author, bookFormat, numberOfCopies, copiesInUse, copiesAvailable, bookCover) 
+                VALUES (?, ?, ?, ?, ?, ?, ?)
                 """;
         return jdbcTemplate.update(sql, books.getTitle(), books.getAuthor(), books.getBookFormat(),
-                books.getNumberOfCopies(), books.getCopiesAvailable(), books.getBookCover());
+                books.getNumberOfCopies(), books.getCopiesInUse(), books.getCopiesAvailable(), books.getBookCover());
     }
 
     @Override

@@ -23,30 +23,30 @@ public class LoanSystemService {
         this.usersService = usersService;
     }
 
-    public List<LoanSystem> checkAllLoans(){
+    public List<LoanSystem> checkAllLoans() {
         return loanSystemDAO.checkAllLoans();
     }
 
-    public List<LoanSystem> selectLoansByUser(String username){
+    public List<LoanSystem> selectLoansByUser(String username) {
         return loanSystemDAO.selectLoansByUser(username);
     }
 
-    public ArrayList<String> selectLoansByTitleAndAuthorAndBookFormat(String title, String author, String bookFormat){
+    public ArrayList<String> selectLoansByTitleAndAuthorAndBookFormat(String title, String author, String bookFormat) {
         return loanSystemDAO.selectLoansByTitleAndAuthorAndBookFormat(title, author, bookFormat);
     }
 
-    public List<LoanSystem> selectLoanById(int id){
+    public List<LoanSystem> selectLoanById(int id) {
         return loanSystemDAO.selectLoansById(id);
     }
 
     public ArrayList<String> selectLoansByTitleAndAuthorAndBookFormatAndUser(String title, String author,
-                                                                             String bookFormat, String username){
+                                                                             String bookFormat, String username) {
         return loanSystemDAO.selectLoansByTitleAndAuthorAndBookFormatAndUser(title, author, bookFormat, username);
     }
 
-    public void updateCopyNumbers (String title, String author, String bookFormat){
+    public void updateCopyNumbers(String title, String author, String bookFormat) {
         ArrayList<String> checkBookLoaned = selectLoansByTitleAndAuthorAndBookFormat(title, author, bookFormat);
-        if(checkBookLoaned.size() > 0){
+        if (checkBookLoaned.size() > 0) {
             int availableCopies = Integer.parseInt(booksService.checkTotalCopies(title, author, bookFormat).toString()
                     .replace("[", "").replace("]", "")) - checkBookLoaned.size();
             booksService.updateAvailableCopies(title, author, availableCopies, bookFormat);
@@ -56,13 +56,13 @@ public class LoanSystemService {
             int availableCopies = Integer.parseInt(booksService.checkTotalCopies(title, author, bookFormat).toString()
                     .replace("[", "").replace("]", "")) - checkBookLoaned.size();
             booksService.updateAvailableCopies(title, author, availableCopies, bookFormat);
-            booksService.updateCopiesInUse(title, author,0, bookFormat);
+            booksService.updateCopiesInUse(title, author, 0, bookFormat);
         }
     }
 
-    public void updateLoanNumbers (String username){
+    public void updateLoanNumbers(String username) {
         List<LoanSystem> checkLoansNumber = selectLoansByUser(username);
-        if(checkLoansNumber.size() > 0) {
+        if (checkLoansNumber.size() > 0) {
             int remainingLoans = Integer.parseInt(usersService.checkTotalLoans(username).toString().
                     replace("[", "").replace("]", "")) - checkLoansNumber.size();
             usersService.updateLoans(username, checkLoansNumber.size(), remainingLoans);
@@ -74,19 +74,19 @@ public class LoanSystemService {
         }
     }
 
-    public void returnBook(int id, String username, String title, String author, String bookFormat){
-        if(!loanSystemDAO.selectLoansById(id).isEmpty() &&
-                !selectLoansByTitleAndAuthorAndBookFormat(title, author, bookFormat).isEmpty()){
+    public void returnBook(int id, String username, String title, String author, String bookFormat) {
+        if (!loanSystemDAO.selectLoansById(id).isEmpty() &&
+                !selectLoansByTitleAndAuthorAndBookFormat(title, author, bookFormat).isEmpty()) {
             loanSystemDAO.returnBook(id);
             updateCopyNumbers(title, author, bookFormat);
             updateLoanNumbers(username);
         } else if (loanSystemDAO.selectLoansById(id).isEmpty() ||
-                !selectLoansByTitleAndAuthorAndBookFormat(title, author, bookFormat).isEmpty()){
-            throw new ResourceNotFound("no loan with id " + id + " for " + title + " by " +author+ "exists");
+                !selectLoansByTitleAndAuthorAndBookFormat(title, author, bookFormat).isEmpty()) {
+            throw new ResourceNotFound("no loan with id " + id + " for " + title + " by " + author + "exists");
         }
     }
 
-    public void borrowBook(String username, String title, String author, String bookFormat){
+    public void borrowBook(String username, String title, String author, String bookFormat) {
         int totalCopies = Integer.parseInt(booksService.checkTotalCopies(title, author, bookFormat).toString()
                 .replace("[", "").replace("]", ""));
         int totalLoaned = selectLoansByTitleAndAuthorAndBookFormat(title, author, bookFormat).size();
@@ -99,16 +99,13 @@ public class LoanSystemService {
         List<LoanSystem> checkCurrentLoans = selectLoansByUser(username);
 
 
-        if(checkCurrentLoans.size() >= checkLoanSlots){
+        if (checkCurrentLoans.size() >= checkLoanSlots) {
             throw new ResourceNotFound("You've reached your borrow limit, please return a book before trying again");
-        }
-        else if (totalCopies == totalLoaned){
+        } else if (totalCopies == totalLoaned) {
             throw new ResourceNotFound("no more copies available for loan, please try again later");
         } else if (checkIfLoanedAlready.size() > 0) {
-            throw new ResourceNotFound("you're already borrowing the " +bookFormat+ " of " +title+ " by " +author);
-        }
-
-        else{
+            throw new ResourceNotFound("you're already borrowing the " + bookFormat + " of " + title + " by " + author);
+        } else {
             int idOfUser = Integer.parseInt(usersService.getUserId(username).toString()
                     .replace("[", "").replace("]", ""));
             int idOfBook = Integer.parseInt(booksService.findBookId(title, author, bookFormat).toString()
@@ -118,10 +115,6 @@ public class LoanSystemService {
             updateCopyNumbers(title, author, bookFormat);
             updateLoanNumbers(username);
         }
+
     }
-
-
-    // maybe add a tbr and read table
-    // could also add a reviews function;
-
 }

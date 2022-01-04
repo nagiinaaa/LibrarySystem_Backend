@@ -1,6 +1,9 @@
 package com.librarSystem.users;
 
+import com.librarSystem.books.BooksDAO;
+import com.librarSystem.books.BooksService;
 import com.librarSystem.exception.ResourceNotFound;
+import com.librarSystem.loanSystem.LoanSystemService;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +19,9 @@ public class UsersService {
     @Autowired
     public UsersService(UsersDAO usersDAO) {
         this.usersDAO = usersDAO;
+
     }
+
 
     public List<Users> getAllUsers(){
         if(usersDAO.getAllUsers().isEmpty()) {
@@ -68,4 +73,5 @@ public class UsersService {
     public List<Users> checkIfLibrarian (String username){
         return usersDAO.checkIfLibrarian(username);
     }
+
 }
