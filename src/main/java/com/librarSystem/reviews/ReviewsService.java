@@ -22,4 +22,16 @@ public class ReviewsService {
     public List<Reviews> getReviewsByUser (int userid){
         return reviewsDAO.getReviewsByUser(userid);
     }
+
+    public int addReview (int userid, int bookid, Reviews reviews){
+        return reviewsDAO.addReview(userid, bookid, reviews);
+    }
+
+    public int editReview (int id, Reviews reviews){
+        return reviewsDAO.editReview(id, reviews);
+    }
+
+    public int deleteReview (int id){
+        return reviewsDAO.deleteReview(id);
+    }
 }

@@ -39,4 +39,32 @@ public class ReviewsDataAccessService implements ReviewsDAO{
                 """;
         return jdbcTemplate.query(sql, new ReviewsRowMapper(), userid);
     }
+
+    @Override
+    public int addReview (int userid, int bookid, Reviews reviews){
+        String sql = """
+                INSERT INTO reviews (userid, bookid, review, rating)
+                VALUES (?, ?, ?, ?)
+                """;
+        return jdbcTemplate.update(sql, userid, bookid, reviews.getReview(), reviews.getRating());
+    }
+
+    @Override
+    public int editReview (int id, Reviews reviews) {
+        String sql = """
+                UPDATE reviews SET review = ?, rating = ?
+                WHERE id = ?
+                """;
+        return jdbcTemplate.update(sql, reviews.getReview(), reviews.getRating(), id);
+    }
+
+    @Override
+    public int deleteReview (int id){
+        String sql = """
+                DELETE FROM reviews 
+                WHERE id = ?
+                """;
+        return jdbcTemplate.update(sql, id);
+
+    }
 }

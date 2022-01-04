@@ -1,10 +1,7 @@
 package com.librarSystem.reviews;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,5 +24,21 @@ public class ReviewsController {
     @GetMapping("user/{userid}")
     public List<Reviews> getReviewsByUser (@PathVariable("userid") int userid){
         return reviewsService.getReviewsByUser(userid);
+    }
+
+    @PostMapping("{userid}/{bookid}")
+    public void addReview (@PathVariable("userid") int userid, @PathVariable("bookid") int bookid,
+                          @RequestBody Reviews reviews){
+        reviewsService.addReview(userid, bookid, reviews);
+    }
+
+    @PutMapping("{id}")
+    public void editReview (@PathVariable("id") int id, @RequestBody Reviews reviews){
+        reviewsService.editReview(id, reviews);
+    }
+
+    @DeleteMapping("{id}")
+    public void  deleteReview (@PathVariable("id") int id){
+        reviewsService.deleteReview(id);
     }
 }
