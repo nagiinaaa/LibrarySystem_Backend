@@ -6,6 +6,9 @@ CREATE TABLE users (id SERIAL PRIMARY KEY, username VARCHAR(255) UNIQUE, passwor
 
 CREATE TABLE loanSystem (id SERIAL PRIMARY KEY, userid INT REFERENCES users(id), bookid INT REFERENCES books(id));
 
+CREATE TABLE shelves (id SERIAL PRIMARY KEY, userid INT REFERENCES users(id), bookid INT REFERENCES books(id),
+readBook BOOLEAN DEFAULT 'no', toBeRead BOOLEAN DEFAULT 'no');
+
 INSERT INTO books (title, author, bookFormat, numberOfCopies, copiesInUse, copiesAvailable, bookCover) VALUES ('The Diviners', 'Libba Bray', 'eBook',
  2, 1, 1, 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1350039340l/15927006.jpg');
  INSERT INTO books (title, author, bookFormat, numberOfCopies, copiesInUse, copiesAvailable, bookCover) VALUES ('The Diviners',
@@ -30,3 +33,9 @@ INSERT INTO users (username, password, librarian, currentLoans, remainingLoans) 
 INSERT INTO loanSystem (userid, bookid) VALUES (1, 1);
 INSERT INTO loanSystem (userid, bookid) VALUES (2, 2);
 INSERT INTO loanSystem (userid, bookid) VALUES (2, 3);
+
+INSERT INTO shelves (userid, bookid, readBook, toBeRead) VALUES(1, 1, 'yes', 'no');
+INSERT INTO shelves (userid, bookid, readBook, toBeRead) VALUES(1, 2, 'no', 'yes');
+INSERT INTO shelves (userid, bookid, readBook, toBeRead) VALUES(2, 1, 'yes', 'no');
+INSERT INTO shelves (userid, bookid, readBook, toBeRead) VALUES(3, 1, 'no', 'yes');
+

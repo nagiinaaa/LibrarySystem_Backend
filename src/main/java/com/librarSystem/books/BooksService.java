@@ -63,9 +63,6 @@ public class BooksService {
         return booksDAO.findBookId(title, author, bookFormat);
     }
 
-    // add logic to update, delete and add books so only a librarian can use them.
-    // add check if librarian method in users.
-
     public void deleteBook (String username, int id){
         int checkIfInUse = Integer.parseInt(checkCopiesInUse(id).toString().
                 replace("[", "").replace("]", ""));

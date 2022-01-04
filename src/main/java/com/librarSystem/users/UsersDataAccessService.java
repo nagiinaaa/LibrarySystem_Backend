@@ -95,6 +95,5 @@ public class UsersDataAccessService implements UsersDAO{
                 WHERE librarian = 'true' AND lower(username) = ?;
                 """;
         return jdbcTemplate.query(sql, new UsersRowMapper(), username);
-
     }
 }
