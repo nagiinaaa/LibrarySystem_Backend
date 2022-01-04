@@ -9,6 +9,9 @@ CREATE TABLE loanSystem (id SERIAL PRIMARY KEY, userid INT REFERENCES users(id),
 CREATE TABLE shelves (id SERIAL PRIMARY KEY, userid INT REFERENCES users(id), bookid INT REFERENCES books(id),
 readBook BOOLEAN DEFAULT 'no', toBeRead BOOLEAN DEFAULT 'no');
 
+CREATE TABLE reviews (id SERIAL PRIMARY KEY, userid INT REFERENCES users(id), bookid INT REFERENCES books(id),
+ review TEXT, rating INT DEFAULT 0);
+
 INSERT INTO books (title, author, bookFormat, numberOfCopies, copiesInUse, copiesAvailable, bookCover) VALUES ('The Diviners', 'Libba Bray', 'eBook',
  2, 1, 1, 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1350039340l/15927006.jpg');
  INSERT INTO books (title, author, bookFormat, numberOfCopies, copiesInUse, copiesAvailable, bookCover) VALUES ('The Diviners',
@@ -38,4 +41,8 @@ INSERT INTO shelves (userid, bookid, readBook, toBeRead) VALUES(1, 1, 'yes', 'no
 INSERT INTO shelves (userid, bookid, readBook, toBeRead) VALUES(1, 2, 'no', 'yes');
 INSERT INTO shelves (userid, bookid, readBook, toBeRead) VALUES(2, 1, 'yes', 'no');
 INSERT INTO shelves (userid, bookid, readBook, toBeRead) VALUES(3, 1, 'no', 'yes');
+
+INSERT INTO reviews (userid, bookid, review, rating) VALUES (1, 1, 'this book was amazing', 5);
+INSERT INTO reviews (userid, bookid, review, rating) VALUES (1, 2, 'hated it', 1);
+INSERT INTO reviews (userid, bookid, review, rating) VALUES (2, 1, 'really liked it', 4);
 
