@@ -10,8 +10,8 @@ public interface ShelvesDAO {
     List<Shelves> checkIfOnReadShelf (int userid, int bookid);
     List<Shelves> checkIfOnTBR (int userid, int bookid);
 
-    int addToReadShelf (Shelves shelves);
-    int addToTBR (Shelves shelves);
+    int addToReadShelf (int userid, int bookid);
+    int addToTBR (int userid, int bookid);
 
     int removeFromReadShelf (int userid, int bookid);
     int removeFromTBR (int userid, int bookid);

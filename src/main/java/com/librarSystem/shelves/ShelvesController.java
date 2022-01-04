@@ -1,10 +1,7 @@
 package com.librarSystem.shelves;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,6 +27,15 @@ public class ShelvesController {
         return shelvesService.getUsersTBR(userid);
     }
 
-  
+
+    @PostMapping("read/{userid}/{bookid}")
+    int addToReadShelf (@PathVariable("userid") int userid, @PathVariable("bookid") int bookid){
+        return shelvesService.addToReadShelf(userid, bookid);
+    }
+
+    @PostMapping("tbr/{userid}/{bookid}")
+    public int addToTBR (@PathVariable("userid") int userid, @PathVariable("bookid") int bookid){
+        return shelvesService.addToTBR(userid, bookid);
+    }
 
 }

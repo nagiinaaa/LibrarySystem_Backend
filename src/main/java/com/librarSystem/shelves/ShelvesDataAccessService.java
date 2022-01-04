@@ -49,21 +49,21 @@ public class ShelvesDataAccessService implements ShelvesDAO {
     }
 
     @Override
-    public int addToReadShelf (Shelves shelves){
+    public int addToReadShelf (int userid, int bookid){
         String sql = """
                 INSERT INTO shelves (userid, bookid, readBook)
                 VALUES (?, ?, 'yes')
                 """;
-        return jdbcTemplate.update(sql, shelves.getUserid(), shelves.getBookid());
+        return jdbcTemplate.update(sql, userid, bookid);
     }
 
     @Override
-    public int addToTBR (Shelves shelves) {
+    public int addToTBR (int userid, int bookid) {
         String sql = """
                 INSERT INTO shelves (userid, bookid, toBeRead)
                 VALUES (?, ?, 'yes')
                 """;
-        return jdbcTemplate.update(sql, shelves.getUserid(), shelves.getBookid());
+        return jdbcTemplate.update(sql, userid, bookid);
     }
 
     @Override
