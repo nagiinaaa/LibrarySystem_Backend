@@ -12,7 +12,10 @@ public class ShelvesRowMapper  implements RowMapper<Shelves> {
         Shelves shelves = new Shelves(
                 rs.getInt("id"),
                 rs.getInt("userid"),
+                rs.getString("username"),
                 rs.getInt("bookid"),
+                rs.getString("title"),
+                rs.getString("author"),
                 rs.getBoolean("readBook"),
                 rs.getBoolean("toBeRead")
         );
