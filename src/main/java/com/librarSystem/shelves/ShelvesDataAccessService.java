@@ -4,6 +4,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository("shelves")
 public class ShelvesDataAccessService implements ShelvesDAO {
@@ -49,6 +50,16 @@ public class ShelvesDataAccessService implements ShelvesDAO {
     }
 
     @Override
+    public Optional<Shelves> selectShelfById (int id){
+        String sql = """
+                SELECT * FROM shelves WHERE id = ?
+                """;
+        return jdbcTemplate.query(sql, new ShelvesRowMapper(), id)
+                .stream()
+                .findFirst();
+    }
+
+    @Override
     public int addToReadShelf (int userid, int bookid){
         String sql = """
                 INSERT INTO shelves (userid, bookid, readBook)
@@ -67,22 +78,22 @@ public class ShelvesDataAccessService implements ShelvesDAO {
     }
 
     @Override
-    public int removeFromReadShelf (int userid, int bookid) {
+    public int removeFromReadShelf (int id) {
         String sql = """
                 DELETE FROM shelves 
-                WHERE userid = ? AND bookid = ? AND readBook = 'yes'
+                WHERE id = ? AND readBook = 'yes'
                 """;
-        return jdbcTemplate.update(sql, userid, bookid);
+        return jdbcTemplate.update(sql, id);
 
     }
 
     @Override
-    public int removeFromTBR (int userid, int bookid) {
+    public int removeFromTBR (int id) {
         String sql = """
                 DELETE FROM shelves 
-                WHERE userid = ? AND bookid = ? AND toBeRead = 'yes'
+                WHERE id = ? AND toBeRead = 'yes'
                 """;
-        return jdbcTemplate.update(sql, userid, bookid);
+        return jdbcTemplate.update(sql, id);
     }
 
 }

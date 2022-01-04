@@ -1,6 +1,7 @@
 package com.librarSystem.shelves;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ShelvesDAO {
 
@@ -10,11 +11,13 @@ public interface ShelvesDAO {
     List<Shelves> checkIfOnReadShelf (int userid, int bookid);
     List<Shelves> checkIfOnTBR (int userid, int bookid);
 
+    Optional<Shelves> selectShelfById (int id);
+
     int addToReadShelf (int userid, int bookid);
     int addToTBR (int userid, int bookid);
 
-    int removeFromReadShelf (int userid, int bookid);
-    int removeFromTBR (int userid, int bookid);
+    int removeFromReadShelf (int id);
+    int removeFromTBR (int id);
 
 
 }

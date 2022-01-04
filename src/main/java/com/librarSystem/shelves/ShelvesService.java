@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ShelvesService {
@@ -68,7 +69,6 @@ public class ShelvesService {
         return shelvesDAO.checkIfOnTBR(userid, bookid);
     }
 
-
     public int addToReadShelf (int userid, int bookid){
         if(usersService.selectUserById(userid).isEmpty()){
             throw new ResourceNotFound("user with id " +userid+ " doesn't exist");
@@ -92,7 +92,21 @@ public class ShelvesService {
             throw new ResourceNotFound("book is already on to be read shelf");
         }
         return shelvesDAO.addToTBR(userid, bookid);
-        
     }
+
+    public int removeFromReadShelf (int id){
+        if (shelvesDAO.selectShelfById(id).isEmpty()){
+            throw new ResourceNotFound("no shelf with id " +id+ " found");
+        }
+        return shelvesDAO.removeFromReadShelf(id);
+    }
+
+    public int removeFromTBR (int id) {
+        if (shelvesDAO.selectShelfById(id).isEmpty()){
+            throw new ResourceNotFound("no shelf with id " +id+ " found");
+        }
+        return shelvesDAO.removeFromTBR(id);
+    }
+
 
 }

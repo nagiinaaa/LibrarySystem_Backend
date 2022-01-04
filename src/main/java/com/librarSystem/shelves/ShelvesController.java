@@ -29,13 +29,23 @@ public class ShelvesController {
 
 
     @PostMapping("read/{userid}/{bookid}")
-    int addToReadShelf (@PathVariable("userid") int userid, @PathVariable("bookid") int bookid){
-        return shelvesService.addToReadShelf(userid, bookid);
+    public void addToReadShelf (@PathVariable("userid") int userid, @PathVariable("bookid") int bookid){
+        shelvesService.addToReadShelf(userid, bookid);
     }
 
     @PostMapping("tbr/{userid}/{bookid}")
-    public int addToTBR (@PathVariable("userid") int userid, @PathVariable("bookid") int bookid){
-        return shelvesService.addToTBR(userid, bookid);
+    public void addToTBR (@PathVariable("userid") int userid, @PathVariable("bookid") int bookid){
+        shelvesService.addToTBR(userid, bookid);
+    }
+
+    @DeleteMapping("read/{id}")
+    public void removeFromReadShelf (@PathVariable("id") int id){
+        shelvesService.removeFromReadShelf(id);
+    }
+
+    @DeleteMapping("tbr/{id}")
+    public void removeFromTBR (@PathVariable("id") int id){
+        shelvesService.removeFromTBR(id);
     }
 
 }

@@ -28,18 +28,18 @@ public class UsersController {
     }
 
     @DeleteMapping("{id}")
-    public int deleteUser (@PathVariable("id") int id){
-        return usersService.deleteUser(id);
+    public void deleteUser (@PathVariable("id") int id){
+        usersService.deleteUser(id);
     }
 
     @PutMapping("{id}")
-    public int updateUser (@PathVariable("id") int id, @RequestBody Users users){
-        return usersService.updateUser(id, users);
+    public void updateUser (@PathVariable("id") int id, @RequestBody Users users){
+        usersService.updateUser(id, users);
     }
 
     @PostMapping
-    public int registerUser (@RequestBody Users users){
-        return usersService.registerUser(users);
+    public void registerUser (@RequestBody Users users){
+        usersService.registerUser(users);
     }
 
 }
