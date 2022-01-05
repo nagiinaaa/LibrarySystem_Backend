@@ -39,6 +39,13 @@ class BooksServiceTest {
     }
 
     @Test
+    void checkNoBooksFound() {
+        assertThatThrownBy(() -> underTest.getAllBooks())
+                .isInstanceOf(Exception.class)
+                .hasMessageContaining("no books found");
+    }
+
+    @Test
     void getBooksByTitle() {
         Books books = new Books(1, "The Diviners", "Libba Bray", "eBook", 2,
                 0, 2, "placeholder");
@@ -48,6 +55,19 @@ class BooksServiceTest {
 
         int actual = underTest.getBooksByTitle("The Diviners").size();
         assertThat(actual).isEqualTo(1);
+    }
+
+    @Test
+    void checkNoBookWithTitleFound() {
+        Books books = new Books(1, "The Diviners", "Libba Bray", "eBook", 2,
+                0, 2, "placeholder");
+
+        List<Books> bookList = List.of(books);
+        when(booksDAO.getBooksByTitle("The Diviners")).thenReturn(bookList);
+
+        assertThatThrownBy(() -> underTest.getBooksByTitle("Harry Potter"))
+                .isInstanceOf(Exception.class)
+                .hasMessageContaining("no books with the title Harry Potter found");
     }
 
     @Test
@@ -64,6 +84,20 @@ class BooksServiceTest {
     }
 
     @Test
+    void checkNoBookByAuthorFound() {
+        Books books = new Books(1, "The Diviners", "Libba Bray", "eBook", 2,
+                0, 2, "placeholder");
+
+        List<Books> bookList = List.of(books);
+        when(booksDAO.getBooksByAuthor("Libba Bray")).thenReturn(bookList);
+
+        assertThatThrownBy(() -> underTest.getBooksByAuthor("Stephen King"))
+                .isInstanceOf(Exception.class)
+                .hasMessageContaining("no books by Stephen King found");
+    }
+
+
+    @Test
     void getBooksById() {
         Books books = new Books(1, "The Diviners", "Libba Bray", "eBook", 2,
                 0, 2, "placeholder");
@@ -73,6 +107,19 @@ class BooksServiceTest {
 
         int actual = underTest.getBooksById(1).size();
         assertThat(actual).isEqualTo(1);
+    }
+
+    @Test
+    void checkNoBookWithId() {
+        Books books = new Books(1, "The Diviners", "Libba Bray", "eBook", 2,
+                0, 2, "placeholder");
+
+        List<Books> bookList = List.of(books);
+        when(booksDAO.getBooksById(1)).thenReturn(bookList);
+
+        assertThatThrownBy(() -> underTest.getBooksById(2))
+                .isInstanceOf(Exception.class)
+                .hasMessageContaining("no books with the id 2 found");
     }
 
     @Test
@@ -106,7 +153,6 @@ class BooksServiceTest {
         Books books = new Books(1, "The Diviners", "Libba Bray", "eBook", 2,
                 0, 2, "placeholder");
 
-        List<Books> bookList = List.of(books);
         when(booksDAO.findBookId("The Diviners", "Libba Bray", "eBook")).thenReturn(1);
 
         int actual = Integer.parseInt(underTest.findBookId("The Diviners", "Libba Bray", "eBook")
@@ -117,10 +163,23 @@ class BooksServiceTest {
     }
 
     @Test
+    void noIdFoundBecauseBookDoesntExist() {
+        Books books = new Books(1, "The Diviners", "Libba Bray", "eBook", 2,
+                0, 2, "placeholder");
+
+        when(booksDAO.findBookId("The Diviners", "Libba Bray", "eBook")).thenReturn(1);
+
+        assertThatThrownBy(() -> underTest.findBookId("Harry Potter", "J.K. Rowling", "eBook"))
+                .isInstanceOf(Exception.class)
+                .hasMessageContaining("no books with the title Harry Potter by J.K. Rowling found in eBook format");
+    }
+
+    @Test
     void deleteBook() {
         Books books = new Books(1, "The Diviners", "Libba Bray", "eBook", 2,
                 0, 2, "placeholder");
-        Users user = new Users(1, "librarian", "password", true, 2, 0, 2);
+        Users user = new Users(1, "librarian", "password", true, 2,
+                0, 2);
 
         List<Books> bookList = List.of(books);
         List<Users> userList = List.of(user);
@@ -144,13 +203,62 @@ class BooksServiceTest {
     }
 
     @Test
+    void cantDeleteAsCopiesInUseExceptionCheck() {
+        Books books = new Books(1, "The Diviners", "Libba Bray", "eBook", 2,
+                1, 1, "placeholder");
+        Users user = new Users(1, "librarian", "password", true, 2,
+                0, 2);
+
+        List<Books> bookList = List.of(books);
+        List<Users> userList = List.of(user);
+
+
+        when(usersService.checkIfLibrarian("librarian")).thenReturn(userList);
+        when(booksDAO.checkCopiesInUse(1)).thenReturn(1);
+        when(booksDAO.getBooksById(1)).thenReturn(bookList);
+        when(booksDAO.deleteBook(1)).thenReturn(1);
+
+
+        assertThatThrownBy(() -> underTest.deleteBook("librarian", 1))
+                .isInstanceOf(Exception.class)
+                .hasMessageContaining("book is currently on loan, please try again later");
+    }
+
+    @Test
+    void mustBeLibrarianToDeleteExceptionCheck(){
+        Books books = new Books(1, "The Diviners", "Libba Bray", "eBook", 2,
+                0, 2, "placeholder");
+        Users user = new Users(1, "librarian", "password", false, 2,
+                0, 2);
+
+        List<Books> bookList = List.of(books);
+
+
+        when(booksDAO.checkCopiesInUse(1)).thenReturn(0);
+        when(booksDAO.getBooksById(1)).thenReturn(bookList);
+        when(booksDAO.deleteBook(1)).thenReturn(1);
+
+
+        assertThatThrownBy(() -> underTest.deleteBook("librarian", 1))
+                .isInstanceOf(Exception.class)
+                .hasMessageContaining("You must be a librarian to do that");
+    }
+
+    @Test
     void updateBook() {
         Books books = new Books(1, "The Diviners", "Libba Bray", "eBook", 2,
                 0, 2, "placeholder");
+        Users user = new Users(1, "librarian", "password", true, 2,
+                0, 2);
 
+        List<Users> userList = List.of(user);
+
+        when(usersService.checkIfLibrarian("librarian")).thenReturn(userList);
         when(booksDAO.updateBook(1, books)).thenReturn(1);
 
-        assertEquals(1, booksDAO.updateBook(1, books));
+        int checkLibrarian = usersService.checkIfLibrarian("librarian").size();
+        assertThat(checkLibrarian).isEqualTo(1);
+        assertEquals(1, underTest.updateBook("librarian", 1, books));
 
     }
 
@@ -159,9 +267,18 @@ class BooksServiceTest {
         Books books = new Books(1, "The Diviners", "Libba Bray", "eBook", 2,
                 0, 2, "placeholder");
 
+        Users user = new Users(1, "librarian", "password", true, 2,
+                0, 2);
+
+        List<Users> userList = List.of(user);
+
+        when(usersService.checkIfLibrarian("librarian")).thenReturn(userList);
         when(booksDAO.addBook(books)).thenReturn(1);
 
-        assertEquals(1, booksDAO.addBook(books));
+        int checkLibrarian = usersService.checkIfLibrarian("librarian").size();
+        assertThat(checkLibrarian).isEqualTo(1);
+
+        assertEquals(1, underTest.addBook("librarian", books));
     }
 
     @Test
@@ -172,7 +289,7 @@ class BooksServiceTest {
         when(booksDAO.updateAvailableCopies("The Diviners", "Libba Bray", 3, "eBook"))
                 .thenReturn(1);
 
-        assertEquals(1, booksDAO.updateAvailableCopies("The Diviners", "Libba Bray", 3,
+        assertEquals(1, underTest.updateAvailableCopies("The Diviners", "Libba Bray", 3,
                 "eBook"));
     }
 
@@ -184,7 +301,7 @@ class BooksServiceTest {
         when(booksDAO.updateCopiesInUse("The Diviners", "Libba Bray", 1, "eBook"))
                 .thenReturn(1);
 
-        assertEquals(1, booksDAO.updateCopiesInUse("The Diviners", "Libba Bray", 1,
+        assertEquals(1, underTest.updateCopiesInUse("The Diviners", "Libba Bray", 1,
                 "eBook"));
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ReviewsService {
@@ -58,5 +59,9 @@ public class ReviewsService {
             throw new ResourceNotFound("review doesn't exist");
         }
         return reviewsDAO.deleteReview(id);
+    }
+
+    public Reviews getReviewById(int id){
+        return reviewsDAO.getReviewById(id).orElseThrow(() -> new ResourceNotFound("review doesn't exist"));
     }
 }

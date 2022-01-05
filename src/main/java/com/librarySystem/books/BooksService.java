@@ -57,7 +57,8 @@ public class BooksService {
 
     public Object findBookId(String title, String author, String bookFormat){
         if(booksDAO.findBookId(title, author, bookFormat) == null){
-            throw new ResourceNotFound("no books with the title " +title+ " by " +author+ " found in " +bookFormat+ "format");
+            throw new ResourceNotFound("no books with the title " +title+ " by " +author+ " found in " +bookFormat+
+                    " format");
         }
         return booksDAO.findBookId(title, author, bookFormat);
     }
@@ -80,20 +81,18 @@ public class BooksService {
         }
     }
 
-    public void updateBook (String username, int id, Books books){
-        if (usersService.checkIfLibrarian(username).size() > 0){
-            booksDAO.updateBook(id, books);
-        } else {
+    public int updateBook (String username, int id, Books books){
+        if (usersService.checkIfLibrarian(username).size() < 0){
             throw new ResourceNotFound("You must be a librarian to do that");
         }
+        return booksDAO.updateBook(id, books);
     }
 
-    public void addBook (String username, Books books){
-        if (usersService.checkIfLibrarian(username).size() > 0) {
-            booksDAO.addBook(books);
-        } else {
+    public int addBook (String username, Books books){
+        if (usersService.checkIfLibrarian(username).size() < 0) {
             throw new ResourceNotFound("You must be a librarian to do that");
         }
+        return booksDAO.addBook(books);
     }
 
     public int updateAvailableCopies(String title, String author, int copies, String bookFormat){
