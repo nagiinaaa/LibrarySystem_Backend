@@ -41,7 +41,7 @@ public class LoanSystemDataAccessService implements LoanSystemDAO {
     }
 
     @Override
-    public List<LoanSystem> selectLoansById(int id) {
+    public List<LoanSystem> selectLoanById(int id) {
         String sql = """
                 SELECT * FROM loanSystem
                 INNER JOIN users
@@ -54,7 +54,7 @@ public class LoanSystemDataAccessService implements LoanSystemDAO {
     }
 
     @Override
-    public ArrayList<String> selectLoansByTitleAndAuthorAndBookFormat(String title, String author, String bookFormat) {
+    public List<LoanSystem> selectLoansByTitleAndAuthorAndBookFormat(String title, String author, String bookFormat) {
         String sql = """
                 SELECT title FROM loanSystem
                 INNER JOIN users
@@ -63,11 +63,11 @@ public class LoanSystemDataAccessService implements LoanSystemDAO {
                 ON books.id = loanSystem.bookid
                 WHERE lower(books.title) = ? AND lower(books.author) = ? AND lower(books.bookFormat) = ?
                 """;
-        return (ArrayList<String>) jdbcTemplate.query(sql, new LoanSystemResultSetExtractor(), title, author, bookFormat);
+        return (List<LoanSystem>) jdbcTemplate.query(sql, new LoanSystemResultSetExtractor(), title, author, bookFormat);
     }
 
     @Override
-    public ArrayList<String> selectLoansByTitleAndAuthorAndBookFormatAndUser (String title, String author, String bookFormat,
+    public List<LoanSystem> selectLoansByTitleAndAuthorAndBookFormatAndUser (String title, String author, String bookFormat,
                                                                               String username) {
         String sql = """
                 SELECT title FROM loanSystem
@@ -78,7 +78,7 @@ public class LoanSystemDataAccessService implements LoanSystemDAO {
                 WHERE lower(books.title) = ? AND lower(books.author) = ? AND lower(books.bookFormat) = ? 
                 AND users.username = ?
                 """;
-        return (ArrayList<String>) jdbcTemplate.query(sql, new LoanSystemResultSetExtractor(), title, author,
+        return (List<LoanSystem>) jdbcTemplate.query(sql, new LoanSystemResultSetExtractor(), title, author,
                 bookFormat, username);
     }
 
@@ -98,6 +98,14 @@ public class LoanSystemDataAccessService implements LoanSystemDAO {
                 VALUES (?, ?);
                 """;
         return jdbcTemplate.update(sql, userid, bookid);
+    }
+
+    @Override
+    public void updateCopyNumbers(String title, String author, String bookFormat){
+    }
+
+    @Override
+    public void updateLoanNumbers(String username){
     }
 
 }

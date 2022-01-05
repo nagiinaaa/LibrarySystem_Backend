@@ -24,28 +24,45 @@ public class LoanSystemService {
     }
 
     public List<LoanSystem> checkAllLoans() {
+        if(loanSystemDAO.checkAllLoans().isEmpty()){
+            throw new ResourceNotFound("no loans found in the system");
+        }
         return loanSystemDAO.checkAllLoans();
     }
 
     public List<LoanSystem> selectLoansByUser(String username) {
+        if(loanSystemDAO.selectLoansByUser(username).isEmpty()){
+            throw new ResourceNotFound(username+ " has no loans");
+        }
         return loanSystemDAO.selectLoansByUser(username);
     }
 
-    public ArrayList<String> selectLoansByTitleAndAuthorAndBookFormat(String title, String author, String bookFormat) {
+    public List<LoanSystem> selectLoansByTitleAndAuthorAndBookFormat(String title, String author, String bookFormat) {
+        if(loanSystemDAO.selectLoansByTitleAndAuthorAndBookFormat(title, author, bookFormat).isEmpty()){
+            throw new ResourceNotFound("no loans of " +title+ " by " +author+ " in " +bookFormat+ " format found");
+        }
         return loanSystemDAO.selectLoansByTitleAndAuthorAndBookFormat(title, author, bookFormat);
     }
 
     public List<LoanSystem> selectLoanById(int id) {
-        return loanSystemDAO.selectLoansById(id);
+        if(loanSystemDAO.selectLoanById(id).isEmpty()){
+            throw new ResourceNotFound("no loans with id " +id+ " found");
+        }
+        return loanSystemDAO.selectLoanById(id);
     }
 
-    public ArrayList<String> selectLoansByTitleAndAuthorAndBookFormatAndUser(String title, String author,
+    public List<LoanSystem> selectLoansByTitleAndAuthorAndBookFormatAndUser(String title, String author,
                                                                              String bookFormat, String username) {
+        if(loanSystemDAO.selectLoansByTitleAndAuthorAndBookFormatAndUser(title, author, bookFormat, username).isEmpty())
+        {
+            throw new ResourceNotFound("no loans of " +title+ " by " +author+ " in " +bookFormat+ " format by "
+                    +username+ " found");
+        }
         return loanSystemDAO.selectLoansByTitleAndAuthorAndBookFormatAndUser(title, author, bookFormat, username);
     }
 
     public void updateCopyNumbers(String title, String author, String bookFormat) {
-        ArrayList<String> checkBookLoaned = selectLoansByTitleAndAuthorAndBookFormat(title, author, bookFormat);
+        List<LoanSystem> checkBookLoaned = selectLoansByTitleAndAuthorAndBookFormat(title, author, bookFormat);
         if (checkBookLoaned.size() > 0) {
             int availableCopies = Integer.parseInt(booksService.checkTotalCopies(title, author, bookFormat).toString()
                     .replace("[", "").replace("]", "")) - checkBookLoaned.size();
@@ -75,12 +92,12 @@ public class LoanSystemService {
     }
 
     public void returnBook(int id, String username, String title, String author, String bookFormat) {
-        if (!loanSystemDAO.selectLoansById(id).isEmpty() &&
+        if (!loanSystemDAO.selectLoanById(id).isEmpty() &&
                 !selectLoansByTitleAndAuthorAndBookFormat(title, author, bookFormat).isEmpty()) {
             loanSystemDAO.returnBook(id);
             updateCopyNumbers(title, author, bookFormat);
             updateLoanNumbers(username);
-        } else if (loanSystemDAO.selectLoansById(id).isEmpty() ||
+        } else if (loanSystemDAO.selectLoanById(id).isEmpty() ||
                 !selectLoansByTitleAndAuthorAndBookFormat(title, author, bookFormat).isEmpty()) {
             throw new ResourceNotFound("no loan with id " + id + " for " + title + " by " + author + "exists");
         }
@@ -91,7 +108,7 @@ public class LoanSystemService {
                 .replace("[", "").replace("]", ""));
         int totalLoaned = selectLoansByTitleAndAuthorAndBookFormat(title, author, bookFormat).size();
 
-        ArrayList<String> checkIfLoanedAlready = selectLoansByTitleAndAuthorAndBookFormatAndUser(title, author, bookFormat,
+        List<LoanSystem> checkIfLoanedAlready = selectLoansByTitleAndAuthorAndBookFormatAndUser(title, author, bookFormat,
                 username);
 
         int checkLoanSlots = Integer.parseInt(usersService.checkTotalLoans(username).toString()

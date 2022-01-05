@@ -127,7 +127,6 @@ class BooksServiceTest {
         Books books = new Books(1, "The Diviners", "Libba Bray", "eBook", 2,
                 0, 2, "placeholder");
 
-        List<Books> bookList = List.of(books);
         when(booksDAO.checkTotalCopies("The Diviners", "Libba Bray", "eBook")).thenReturn(2);
 
         int actual = Integer.parseInt(underTest.checkTotalCopies("The Diviners", "Libba Bray", "eBook").toString()
