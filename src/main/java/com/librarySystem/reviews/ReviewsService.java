@@ -60,8 +60,4 @@ public class ReviewsService {
         }
         return reviewsDAO.deleteReview(id);
     }
-
-    public Reviews getReviewById(int id){
-        return reviewsDAO.getReviewById(id).orElseThrow(() -> new ResourceNotFound("review doesn't exist"));
-    }
 }

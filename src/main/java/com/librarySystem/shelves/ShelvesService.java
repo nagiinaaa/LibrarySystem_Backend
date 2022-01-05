@@ -74,7 +74,7 @@ public class ShelvesService {
         }
         else if (booksService.getBooksById(bookid).isEmpty()){
             throw new ResourceNotFound("no books with the id " +bookid+ " found");
-        } else if (shelvesDAO.checkIfOnReadShelf(userid, bookid).isEmpty()){
+        } else if (!shelvesDAO.checkIfOnReadShelf(userid, bookid).isEmpty()){
             throw new ResourceNotFound("book is already on read shelf");
         }
         return shelvesDAO.addToReadShelf(userid, bookid);
@@ -87,7 +87,7 @@ public class ShelvesService {
         }
         else if (booksService.getBooksById(bookid).isEmpty()){
             throw new ResourceNotFound("no books with the id " +bookid+ " found");
-        } else if (shelvesDAO.checkIfOnReadShelf(userid, bookid).isEmpty()){
+        } else if (!shelvesDAO.checkIfOnTBR(userid, bookid).isEmpty()){
             throw new ResourceNotFound("book is already on to be read shelf");
         }
         return shelvesDAO.addToTBR(userid, bookid);

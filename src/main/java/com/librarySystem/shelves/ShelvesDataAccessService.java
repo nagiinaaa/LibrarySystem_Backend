@@ -46,7 +46,12 @@ public class ShelvesDataAccessService implements ShelvesDAO {
     @Override
     public List<Shelves> checkIfOnReadShelf (int userid, int bookid){
         String sql = """
-                SELECT * FROM shelves WHERE userid = ? AND bookid = ? AND readBook = 'yes'
+                SELECT * FROM shelves 
+                INNER JOIN users
+                ON users.id = shelves.userid
+                INNER JOIN books
+                ON books.id = shelves.bookid
+                WHERE userid = ? AND bookid = ? AND readBook = 'yes'
                 """;
         return jdbcTemplate.query(sql, new ShelvesRowMapper(), userid, bookid);
     }
@@ -54,7 +59,12 @@ public class ShelvesDataAccessService implements ShelvesDAO {
     @Override
     public List<Shelves> checkIfOnTBR (int userid, int bookid){
         String sql = """
-                SELECT * FROM shelves WHERE userid = ? AND bookid = ? AND toBeRead = 'yes'
+                SELECT * FROM shelves 
+                INNER JOIN users
+                ON users.id = shelves.userid
+                INNER JOIN books
+                ON books.id = shelves.bookid
+                WHERE userid = ? AND bookid = ? AND toBeRead = 'yes'
                 """;
         return jdbcTemplate.query(sql, new ShelvesRowMapper(), userid, bookid);
     }

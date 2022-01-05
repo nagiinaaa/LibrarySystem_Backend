@@ -123,7 +123,7 @@ class ReviewsServiceTest {
         when(reviewsDAO.getReviewById(1)).thenReturn(Optional.ofNullable(reviewList.get(0)));
         when(reviewsDAO.editReview(1, reviews)).thenReturn(1);
 
-        assertThat(underTest.getReviewById(1)).isNotNull();
+        assertThat(reviewsDAO.getReviewById(1)).isNotNull();
         assertEquals(1, underTest.editReview(1, reviews));
     }
 
@@ -137,7 +137,7 @@ class ReviewsServiceTest {
         when(reviewsDAO.getReviewById(1)).thenReturn(Optional.ofNullable(reviewList.get(0)));
         when(reviewsDAO.deleteReview(1)).thenReturn(1);
 
-        assertThat(underTest.getReviewById(1)).isNotNull();
+        assertThat(reviewsDAO.getReviewById(1)).isNotNull();
         assertThat(underTest.deleteReview(1)).isEqualTo(1);
 
 
@@ -151,21 +151,10 @@ class ReviewsServiceTest {
         List<Reviews> reviewList = List.of(reviews);
 
         when(reviewsDAO.getReviewById(1)).thenReturn(Optional.ofNullable(reviewList.get(0)));
+        when(reviewsDAO.deleteReview(1)).thenReturn(1);
 
-        assertThatThrownBy(() -> underTest.getReviewById(2))
+        assertThatThrownBy(() -> underTest.deleteReview(2))
                 .isInstanceOf(Exception.class)
                 .hasMessageContaining("review doesn't exist");
-    }
-
-    @Test
-    void getReviewById(){
-        Reviews reviews = new Reviews(1, 1, "user", 1, "title", "author",
-                "review", 5);
-
-        List<Reviews> reviewList = List.of(reviews);
-
-        when(reviewsDAO.getReviewById(1)).thenReturn(Optional.ofNullable(reviewList.get(0)));
-
-        assertThat(underTest.getReviewById(1)).isNotNull();
     }
 }

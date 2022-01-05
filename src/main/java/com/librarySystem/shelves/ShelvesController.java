@@ -47,5 +47,4 @@ public class ShelvesController {
     public void removeFromTBR (@PathVariable("id") int id){
         shelvesService.removeFromTBR(id);
     }
-
 }
