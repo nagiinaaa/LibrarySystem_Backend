@@ -37,12 +37,12 @@ public class UsersDataAccessService implements UsersDAO{
     }
 
     @Override
-    public Object getUserId(String username){
+    public List<Users> getUserId(String username){
         String sql = """
                 SELECT id FROM users
                 WHERE lower(username) = ?;
                 """;
-        return jdbcTemplate.query(sql, new UserIdResultSetExtractor(), username);
+        return (List<Users>) jdbcTemplate.query(sql, new UserIdResultSetExtractor(), username);
     }
 
     @Override

@@ -18,7 +18,6 @@ public class UsersService {
 
     }
 
-
     public List<Users> getAllUsers(){
         if(usersDAO.getAllUsers().isEmpty()) {
             throw new ResourceNotFound("no users found");
@@ -33,8 +32,8 @@ public class UsersService {
         return usersDAO.selectUserById(id);
     }
 
-    public Object getUserId(String username){
-        if(usersDAO.getUserId(username).equals(null)){
+    public List<Users> getUserId(String username){
+        if(usersDAO.getUserId(username).isEmpty()){
             throw new ResourceNotFound(username + " doesn't exist");
         }
         return usersDAO.getUserId(username);

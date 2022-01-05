@@ -72,7 +72,7 @@ public class LoanSystemDataAccessService implements LoanSystemDAO {
         String sql = """
                 SELECT title FROM loanSystem
                 INNER JOIN users
-                ON users.id = loanSystemm.userid
+                ON users.id = loanSystem.userid
                 INNER JOIN books
                 ON books.id = loanSystem.bookid
                 WHERE lower(books.title) = ? AND lower(books.author) = ? AND lower(books.bookFormat) = ? 

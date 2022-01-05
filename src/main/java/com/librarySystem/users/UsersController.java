@@ -42,4 +42,8 @@ public class UsersController {
         usersService.registerUser(users);
     }
 
+//    @GetMapping("test/{username}")
+//    public Object getUserId(@PathVariable("username") String username){
+//        return usersService.getUserId(username);
+//    }
 }
